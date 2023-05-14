@@ -1,15 +1,10 @@
-import {ResponseTypeCatalogues, ResponseTypeVacancies, VacancyInfo} from "../../1-DAL/vacanciesAPI";
-import {
-    setCatalogueDataAC,
-    setErrorVacancyAC, setFiltersAC, setPageInfoAC,
-    setVacanciesDataAC,
-    setVacancyDataAC,
-    vacanciesReducer
-} from "./vacanciesReducer";
+import {ResponseTypeCatalogues, ResponseTypeVacancies, VacancyInfo} from "1-DAL/vacanciesAPI";
+import {vacanciesActions, VacanciesInitialStateType, vacanciesReducer, vacanciesThunks} from "./vacanciesReducer";
+import {selectedVacanciesReducer, selectedVacanciesThunks} from "../selectedVacanciesReducer/selectedVacanciesReducer";
 
 describe('vacanciesReducers actions test', () => {
 
-    let startState: any;
+    let startState: VacanciesInitialStateType;
     const vacanciesData: ResponseTypeVacancies = {
         objects: [{
             id: 1,
@@ -79,38 +74,65 @@ describe('vacanciesReducers actions test', () => {
         }
     })
 
+    it('should set correct loading status', () => {
+        const endState = vacanciesReducer(startState, vacanciesActions.isLoading({isLoading: true}))
+        expect(endState.isLoading).toBeTruthy()
+        expect(endState.error).toBe('')
+    })
+
     it('should set correct error', () => {
-        const endState = vacanciesReducer(startState, setErrorVacancyAC('some error'))
+        const endState = vacanciesReducer(startState, vacanciesActions.setError({error: 'some error'}))
         expect(endState.error).toBe('some error')
     })
 
-    it('should set correct catalogues data', () => {
-        const catalogueData:ResponseTypeCatalogues[] = [{title_rus: 'IT', key: 1},{title_rus: 'MUSIC', key: 2}]
-        const endState = vacanciesReducer(startState, setCatalogueDataAC(catalogueData))
-        expect(endState.catalogueData).toStrictEqual([{title_rus: 'IT', key: 1},{title_rus: 'MUSIC', key: 2}])
-    })
-
-    it('should set correct vacancies data', () => {
-        const endState = vacanciesReducer(startState, setVacanciesDataAC(vacanciesData))
-        expect(startState.vacanciesData.objects.length).toBe(0)
-        expect(endState.vacanciesData.objects.length).toBe(2)
-    })
-
-    it('should set correct selected vacancy data', () => {
-        const endState = vacanciesReducer(startState, setVacancyDataAC(vacanciesData.objects[0]))
-        expect(endState.vacancyData.profession).toBe('Frontend developer')
-    })
-
-    it('should set correct page data', () => {
-        const endState = vacanciesReducer(startState, setPageInfoAC(5))
-        expect(endState.currentPage).toBe(5)
-    })
-
     it('should set correct filters data', () => {
-        const endState = vacanciesReducer(startState, setFiltersAC('Manager', 50000, 100000))
+        const endState = vacanciesReducer(startState, vacanciesActions.setFilters({
+            keyWord: 'Manager',
+            payment_from: 50000,
+            payment_to: 100000,
+            catalogues: 'IT'
+        }))
         expect(endState.keyWord).toBe('Manager')
         expect(endState.payment_from).toBe(50000)
         expect(endState.payment_to).toBe(100000)
+    })
+
+    it('should return correct catalogues data', () => {
+        const returnedValue = [{title_rus: 'IT', key: 1}]
+
+        const action = vacanciesThunks.setCatalogueData.fulfilled(returnedValue, "requestId");
+        const state = vacanciesReducer(startState, action);
+
+        expect(state.catalogueData).toEqual(returnedValue)
+        expect(state.currentPage).toBe(1)
+        expect(state.pageCount).toBe(3)
+    })
+
+    it('should return correct vacancies data', () => {
+        const args = {currentPage: 1, count: 3}
+
+        const action = vacanciesThunks.setVacanciesData.fulfilled(vacanciesData, "requestId", args);
+        const state = vacanciesReducer(startState, action);
+
+        expect(state.vacanciesData).toEqual(vacanciesData)
+    })
+
+    it('should return correct filtred vacancies data', () => {
+        const args = {currentPage: 1, count: 3, published: 1, keyWord: '', payment_from: 10, payment_to: 50, catalogues:  '' }
+
+        const action = vacanciesThunks.setFiltredVacanciesData.fulfilled(vacanciesData, "requestId", args);
+        const state = vacanciesReducer(startState, action);
+
+        expect(state.vacanciesData).toEqual(vacanciesData)
+    })
+
+    it('should return correct vacancy data', () => {
+        const args = {id: 1}
+
+        const action = vacanciesThunks.setVacancyData.fulfilled(startState.vacancyData, "requestId", args);
+        const state = vacanciesReducer(startState, action);
+
+        expect(state.vacancyData).toEqual(startState.vacancyData)
     })
 
 })

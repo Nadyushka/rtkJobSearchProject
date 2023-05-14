@@ -59,7 +59,6 @@ describe('selectedVacanciesReducers actions test', () => {
         expect(state.vacanciesData.objects).toEqual(returnedValue.objects)
         expect(state.currentPage).toBe(1)
         expect(state.pageCount).toBe(3)
-
     })
 
 })

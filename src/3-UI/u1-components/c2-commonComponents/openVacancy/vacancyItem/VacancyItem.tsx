@@ -5,10 +5,7 @@ import selectedStar from '3-UI/u2-assets/pictures/selectedStar.svg'
 import notSelectedStar from '3-UI/u2-assets/pictures/notSelectedStar.svg'
 import locationIcon from '3-UI/u2-assets/pictures/locationIcon.svg'
 import {useNavigate} from "react-router-dom";
-import {
-    selectedVacanciesThunks
-
-} from "2-BLL/selectedVacanciesReducer/selectedVacanciesReducer";
+import {selectedVacanciesThunks} from "2-BLL/selectedVacanciesReducer/selectedVacanciesReducer";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {useStyles} from "./styleVacancyItem";
 import {
@@ -53,7 +50,14 @@ export const VacancyItem = ({
             dispatch(selectedVacanciesThunks.removeVacancyFromSelection({id, currentPage, count}))
         }
         if (!marked) {
-            dispatch(selectedVacanciesThunks.addVacancyToSelected({id, profession:professionName, payment_from, currency, type_of_work, town}))
+            dispatch(selectedVacanciesThunks.addVacancyToSelected({
+                id,
+                profession: professionName,
+                payment_from,
+                currency,
+                type_of_work,
+                town
+            }))
         }
         if (!showSelectedVacancy && marked) {
             dispatch(selectedVacanciesThunks.removeVacancyFromSelection({id, currentPage, count}))

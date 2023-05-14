@@ -36,9 +36,10 @@ export const SavedVacancies = () => {
     let totalPages = Math.ceil(totalVacancies / pageCount)
     const [activePage, setPage] = useState<number>(currentPage);
 
+
     let regularFirstPage = activePage * pageCount - pageCount;
-    let notEnoughValuesPage = activePage * pageCount - 2 * pageCount
-    let firstValueOfCurrentPage = activePage > totalPages ? notEnoughValuesPage : regularFirstPage
+    let notEnoughValuesFirstPage = activePage * pageCount - 2 * pageCount
+    let firstValueOfCurrentPage = activePage > totalPages ? notEnoughValuesFirstPage : regularFirstPage
     let lastValueOfCurrentPage = firstValueOfCurrentPage + pageCount
 
     useEffect(() => {
@@ -46,11 +47,11 @@ export const SavedVacancies = () => {
             navigate(PATH.NO_SELECTED_VACANCIES)
         }
         dispatch(selectedVacanciesThunks.setSelectedVacanciesData({currentPage: 1, count: 3}))
-    }, [selectedVacancies.length])
+    }, [selectedVacancies.length ])
 
-    if (!isAuthorised) {
-        navigate(PATH.LOGIN)
-    }
+    // if (!isAuthorised) {
+    //     navigate(PATH.LOGIN)
+    // }
 
     if (isLoading) {
         return <LoaderComponent/>

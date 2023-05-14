@@ -9,7 +9,6 @@ import {
     Title
 } from "@mantine/core";
 import {ChevronDown, ChevronUp} from 'tabler-icons-react';
-import {setFiltersAC, setFiltredVacanciesDataTC, setVacanciesDataTC} from "2-BLL/vacancyReducer/vacanciesReducer";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
     catalogueDataVacancies,
@@ -17,6 +16,7 @@ import {
     pageCountVacancies, paymentFromVacancies, paymentToVacancies
 } from "2-BLL/vacancyReducer/vacancySelectors";
 import {useStyles} from './styleFilters';
+import {vacanciesActions, vacanciesThunks} from "../../../../../../../2-BLL/vacancyReducer/vacanciesReducer";
 
 export const Filters = () => {
 
@@ -44,12 +44,20 @@ export const Filters = () => {
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
     const onClickButtonHandler = () => {
-        dispatch(setFiltredVacanciesDataTC(1, count, 1, keyWord, minSalaryValue, maxSalaryValue, jobAreaValue))
+        dispatch(vacanciesThunks.setFiltredVacanciesData({
+            currentPage: 1,
+            count,
+            published: 1,
+            keyWord,
+            payment_from: minSalaryValue,
+            payment_to: maxSalaryValue,
+            catalogues: jobAreaValue
+        }))
     }
 
     const onClockClearFiltersButton = () => {
-        dispatch(setFiltersAC('', '', '', ''))
-        dispatch(setVacanciesDataTC(1, count))
+        dispatch(vacanciesActions.setFilters({catalogues: '', payment_from: '', payment_to: '', keyWord: ''}))
+        dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count}))
         setMinSalaryValue('')
         setMaxSalaryValue('')
         setJobAreaValue('')

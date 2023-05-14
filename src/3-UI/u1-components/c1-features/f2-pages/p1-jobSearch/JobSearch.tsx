@@ -16,11 +16,11 @@ export const JobSearch = () => {
 
     const {classes, cx} = useStyles();
 
-    useEffect(() => {
-        if (!isAuthorised) {
-            navigate(PATH.LOGIN)
-        }
-    }, [isAuthorised])
+    // useEffect(() => {
+    //     if (!isAuthorised) {
+    //         navigate(PATH.LOGIN)
+    //     }
+    // }, [isAuthorised])
 
     return (
         <Container className={classes.jobSearchContainer}>

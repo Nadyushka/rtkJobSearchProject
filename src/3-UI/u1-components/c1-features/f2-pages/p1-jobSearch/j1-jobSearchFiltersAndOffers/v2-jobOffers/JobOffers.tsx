@@ -5,13 +5,8 @@ import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader"
 import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
 import {VacancyItem} from "../../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacancyReducer/vacanciesReducer";
 import {
-    setCatalogueDataTC, setErrorVacancyAC, setFiltersAC,
-    setFiltredVacanciesDataTC,
-    setVacanciesDataTC
-} from "2-BLL/vacancyReducer/vacanciesReducer";
-import {
-    currentPageVacancies,
     errorVacancies,
     isLoadingVacancies,
     jobAreaVacancies,
@@ -46,15 +41,28 @@ export const JobOffers = () => {
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
 
     const pageOnClickHandler = () => {
-        dispatch(setFiltersAC(kewWordValue, paymentFrom, paymentTo, jobArea))
+        dispatch(vacanciesActions.setFilters({
+            keyWord: kewWordValue,
+            payment_from: paymentFrom,
+            payment_to: paymentTo,
+            catalogues: jobArea
+        }))
     }
 
     useEffect(() => {
         if (jobArea.length !== 0) {
-            dispatch(setFiltredVacanciesDataTC(activePage, pagesCount, 1, kewWordValue, paymentFrom, paymentTo, jobArea))
+            dispatch(vacanciesThunks.setFiltredVacanciesData({
+                currentPage: activePage,
+                count: pagesCount,
+                published: 1,
+                keyWord: kewWordValue,
+                payment_from: paymentFrom,
+                payment_to: paymentTo,
+                catalogues: jobArea
+            }))
         } else {
-            dispatch(setCatalogueDataTC())
-            dispatch(setVacanciesDataTC(activePage, pagesCount))
+            dispatch(vacanciesThunks.setCatalogueData())
+            dispatch(vacanciesThunks.setVacanciesData({currentPage: activePage, count: pagesCount}))
         }
         kewWord === '' && setKewWordValue('')
     }, [activePage, paymentFrom, paymentTo, jobArea, kewWord])
@@ -107,7 +115,7 @@ export const JobOffers = () => {
             {vacancies.length === 0 &&
                 <Text className={classes.jobSearchNotFound}>Совпадений по заданному набору фильтров нет</Text>}
 
-            {/*<ErrorComponent errorMessage={error} setError={setErrorVacancyAC}/>*/}
+            <ErrorComponent errorMessage={error} setError={vacanciesActions.setError}/>
 
         </Container>
     );

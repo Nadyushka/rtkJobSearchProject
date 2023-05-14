@@ -23,6 +23,7 @@ const setSelectedVacanciesData = createAppAsyncThunk<ReturnedValue, SetSelectedV
         try {
             const localStorageSelectedVacancies = localStorage.getItem('selectedVacancies') ? localStorage.getItem('selectedVacancies') : '{selectedVacanciesArray:[]}'
             const selectedItems: VacancyInfo[] = JSON.parse(localStorageSelectedVacancies!).selectedVacanciesArray
+           console.log({ selectedItems, ls: JSON.parse(localStorageSelectedVacancies!) })
             return {objects: selectedItems, currentPage, count}
         } catch (e) {
             errorHandler(e, dispatch, selectedVacanciesActions.setError)
@@ -61,6 +62,7 @@ const addVacancyToSelected = createAppAsyncThunk<ReturnedValue,addVacancyToSelec
         dispatch(selectedVacanciesActions.isLoading({isLoading: true}))
         try {
             const count = getState().selectedVacancies.pageCount
+            const currentPage = 1
             const selectedVacanciesSaved = getState().selectedVacancies.vacanciesData.objects
             const newVacancy = {
                 id,
@@ -74,7 +76,7 @@ const addVacancyToSelected = createAppAsyncThunk<ReturnedValue,addVacancyToSelec
             const selectedVacancies: SelectedVacancyInfo[] = [newVacancy, ...selectedVacanciesSaved]
             localStorage.removeItem('selectedVacancies')
             localStorage.setItem('selectedVacancies', JSON.stringify({selectedVacanciesArray: selectedVacancies}))
-            return {objects: selectedVacancies, currentPage: 1, count}
+            return {objects: selectedVacancies, currentPage, count}
         } catch (e) {
             errorHandler(e, dispatch, selectedVacanciesActions.setError)
             return rejectWithValue(null)
@@ -98,16 +100,19 @@ const slice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(setSelectedVacanciesData.fulfilled, (state, action) => {
             state.vacanciesData.objects = action.payload.objects
+            state.vacanciesData.total = action.payload.objects.length
             state.currentPage = action.payload.currentPage
             state.pageCount = action.payload.count
         });
         builder.addCase(removeVacancyFromSelection.fulfilled, (state, action) => {
             state.vacanciesData.objects = action.payload.objects
+            state.vacanciesData.total = action.payload.objects.length
             state.currentPage = action.payload.currentPage
             state.pageCount = action.payload.count
         });
         builder.addCase(addVacancyToSelected.fulfilled, (state, action) => {
             state.vacanciesData.objects = action.payload.objects
+            state.vacanciesData.total = action.payload.objects.length
             state.currentPage = action.payload.currentPage
             state.pageCount = action.payload.count
         });
@@ -115,10 +120,8 @@ const slice = createSlice({
 })
 
 export const selectedVacanciesReducer = slice.reducer;
-export const selectedVacanciesThunks = {setSelectedVacanciesData, removeVacancyFromSelection, addVacancyToSelected};
 export const selectedVacanciesActions = slice.actions;
-
-type ReturnedValue = { objects: SelectedVacancyInfo[], currentPage: number, count: number }
+export const selectedVacanciesThunks = {setSelectedVacanciesData, removeVacancyFromSelection, addVacancyToSelected};
 
 // types
 
@@ -126,3 +129,4 @@ export type SelectedVacanciesInitialStateType = typeof initialState
 type SetSelectedVacanciesDataArgumentsType = { currentPage: number, count: number }
 type RemoveVacancyFromSelectionArgumentsType = { id: number, currentPage: number, count: number }
 type addVacancyToSelectedArgumentsType = { id: number, profession: string, payment_from: number | "", currency: "rub" | "uah" | "uzs", type_of_work: string, town: string }
+type ReturnedValue = { objects: SelectedVacancyInfo[], currentPage: number, count: number }
