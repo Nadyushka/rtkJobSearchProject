@@ -5,10 +5,10 @@ import {
     vacancyApi,
     VacancyInfo
 } from "1-DAL/vacanciesAPI";
-import {errorHandler} from "3-UI/u2-assets/utilits/error";
-import {getDataFromLocalStorage} from "3-UI/u2-assets/utilits/localStorageData";
-import {setPropertyMarkedToVacancies} from "3-UI/u2-assets/utilits/setPropertyMarkedToVacancies";
-import {createAppAsyncThunk} from "3-UI/u2-assets/utilits/create-app-async-thunk";
+import {errorHandler} from "3-UI/u4-common/utilits/error";
+import {getDataFromLocalStorage} from "3-UI/u4-common/utilits/localStorageData";
+import {setPropertyMarkedToVacancies} from "3-UI/u4-common/utilits/setPropertyMarkedToVacancies";
+import {createAppAsyncThunk} from "3-UI/u4-common/utilits/create-app-async-thunk";
 
 const initialState = {
     isLoading: false,

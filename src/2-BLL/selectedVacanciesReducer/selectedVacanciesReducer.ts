@@ -1,7 +1,7 @@
 import {SelectedVacancyInfo, VacancyInfo} from "1-DAL/vacanciesAPI";
-import {errorHandler} from "3-UI/u2-assets/utilits/error";
+import {errorHandler} from "3-UI/u4-common/utilits/error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createAppAsyncThunk} from "../../3-UI/u2-assets/utilits/create-app-async-thunk";
+import {createAppAsyncThunk} from "../../3-UI/u4-common/utilits/create-app-async-thunk";
 
 const initialState = {
     isLoading: false,

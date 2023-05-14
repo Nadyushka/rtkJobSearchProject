@@ -3,7 +3,7 @@ import {Search} from 'tabler-icons-react';
 import {Button, Container, Pagination, Text, TextInput} from '@mantine/core';
 import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
-import {VacancyItem} from "../../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
+import {VacancyItem} from "../../../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {vacanciesActions, vacanciesThunks} from "2-BLL/vacancyReducer/vacanciesReducer";
 import {

@@ -12,7 +12,7 @@ import {
     errorSelectedVacancies,
     isLoadingSelectedVacancies, pageCountSelectedVacancies, vacanciesDataSelectedVacancies
 } from "2-BLL/selectedVacanciesReducer/selectorsSelectedVacancies";
-import {VacancyItem} from "../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
+import {VacancyItem} from "../../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {PATH} from "../../../../c2-commonComponents/routes/Routes";
 import {LoaderComponent} from "../../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../../c2-commonComponents/error/ErrorComponent";

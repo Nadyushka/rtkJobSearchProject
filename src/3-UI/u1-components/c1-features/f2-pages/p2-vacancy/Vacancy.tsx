@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {errorVacancies, isLoadingVacancies, vacancyDataVacancies} from "2-BLL/vacancyReducer/vacancySelectors";
 import {LoaderComponent} from "../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../c2-commonComponents/error/ErrorComponent";
-import {VacancyItem} from "../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
+import {VacancyItem} from "../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {useStyles} from "./styleVacancy";
 
 

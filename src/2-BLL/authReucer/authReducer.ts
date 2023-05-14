@@ -1,7 +1,7 @@
 import {authApi, ResponseTypeAuth} from "1-DAL/authApi";
-import {errorHandler} from "3-UI/u2-assets/utilits/error";
+import {errorHandler} from "3-UI/u4-common/utilits/error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createAppAsyncThunk} from "3-UI/u2-assets/utilits/create-app-async-thunk";
+import {createAppAsyncThunk} from "3-UI/u4-common/utilits/create-app-async-thunk";
 
 const initialState = {
     isAuthorised: false,
@@ -77,10 +77,10 @@ export const authReducer = slice.reducer;
 export const authThunks = {authorisedWithPassword, refreshToken};
 export const authActions = slice.actions;
 
+// types
+
 export type AuthInitialStateType = typeof initialState
-
 type AuthorisedWithPasswordArgsType = { login: string, password: string, client_id: number, client_secret: string, hr: number }
-
 export type userAuthDataType = {
     "access_token": string,
     "refresh_token": string,

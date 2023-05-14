@@ -31,8 +31,8 @@ export const vacancyApi = {
             'Authorization': `Bearer ${token}`,
         }
         return instance.get<ResponseTypeVacancies>('vacancies', {params})
-    }
-    ,
+    },
+
     getVacancy(id: number, token: string) {
         return instance.get<VacancyInfo>(`vacancies/${id}/`,
             {params: {'Authorization': `Bearer ${token}`}})
@@ -43,7 +43,6 @@ export type ResponseTypeCatalogues = {
     title_rus: string,
     key: number,
 }
-
 
 export type ResponseTypeVacancies = {
     "objects": VacancyInfo[],
