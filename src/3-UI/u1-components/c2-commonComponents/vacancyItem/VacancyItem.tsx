@@ -1,17 +1,17 @@
-import React, {useEffect} from 'react';
+import React, {FC, useEffect} from 'react';
 import {MouseEvent, useState} from 'react';
 import {Box, Container, Text, Title} from "@mantine/core";
 import selectedStar from '3-UI/u2-assets/pictures/selectedStar.svg'
 import notSelectedStar from '3-UI/u2-assets/pictures/notSelectedStar.svg'
 import locationIcon from '3-UI/u2-assets/pictures/locationIcon.svg'
 import {useNavigate} from "react-router-dom";
-import {selectedVacanciesThunks} from "2-BLL/selectedVacanciesReducer/selectedVacanciesReducer";
+import {selectedVacanciesThunks} from "2-BLL/selectedVacanciesSlice/selectedVacanciesSlice";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {useStyles} from "./styleVacancyItem";
 import {
     currentPageSelectedVacancies,
     pageCountSelectedVacancies
-} from "2-BLL/selectedVacanciesReducer/selectorsSelectedVacancies";
+} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
 
 type PropsType = {
     id: number
@@ -24,15 +24,15 @@ type PropsType = {
     currency: 'rub' | 'uah' | 'uzs'
 }
 
-export const VacancyItem = ({
-                                id, professionName,
-                                payment_from,
-                                currency,
-                                type_of_work,
-                                town,
-                                marked,
-                                showSelectedVacancy
-                            }: PropsType) => {
+export const VacancyItem: FC<PropsType> = ({
+                                               id, professionName,
+                                               payment_from,
+                                               currency,
+                                               type_of_work,
+                                               town,
+                                               marked,
+                                               showSelectedVacancy
+                                           }) => {
 
 
     const dispatch = useAppDispatch()

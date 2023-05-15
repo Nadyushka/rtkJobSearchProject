@@ -5,7 +5,7 @@ import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader"
 import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
 import {VacancyItem} from "../../../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {vacanciesActions, vacanciesThunks} from "2-BLL/vacancyReducer/vacanciesReducer";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacanciesSlice";
 import {
     errorVacancies,
     isLoadingVacancies,
@@ -15,7 +15,7 @@ import {
     paymentFromVacancies,
     paymentToVacancies,
     vacanciesDataVacancies
-} from "2-BLL/vacancyReducer/vacancySelectors";
+} from "2-BLL/vacanciesSlice/vacancies.selectors";
 import {useStyles} from "./styleJobOffers";
 
 export const JobOffers = () => {
@@ -40,7 +40,7 @@ export const JobOffers = () => {
     const keyWordInputDataAttribute = {'data-elem': 'search-input'}
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
 
-    const pageOnClickHandler = () => {
+    const setNewPageWithFiltersHandler = () => {
         dispatch(vacanciesActions.setFilters({
             keyWord: kewWordValue,
             payment_from: paymentFrom,
@@ -62,7 +62,7 @@ export const JobOffers = () => {
             }))
         } else {
             dispatch(vacanciesThunks.setCatalogueData())
-            dispatch(vacanciesThunks.setVacanciesData({currentPage: activePage, count: pagesCount}))
+            dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count: 3}))
         }
         kewWord === '' && setKewWordValue('')
     }, [activePage, paymentFrom, paymentTo, jobArea, kewWord])
@@ -81,7 +81,7 @@ export const JobOffers = () => {
                        icon={<Search size="1rem"/>}
                        rightSection={
                            <Button size="sm"
-                                   onClick={pageOnClickHandler}
+                                   onClick={setNewPageWithFiltersHandler}
                                    {...useKeyWordDataAttribute}>
                                Поиск
                            </Button>}
@@ -109,11 +109,13 @@ export const JobOffers = () => {
                 <Pagination className={classes.jobSearchPagination}
                             value={activePage}
                             onChange={setPage}
-                            onClick={pageOnClickHandler}
+                            onClick={setNewPageWithFiltersHandler}
                             total={totalPages}/>}
 
             {vacancies.length === 0 &&
-                <Text className={classes.jobSearchNotFound}>Совпадений по заданному набору фильтров нет</Text>}
+                <Text className={classes.jobSearchNotFound}>Упс, совпадений по заданному набору фильтров нет</Text>
+
+            }
 
             <ErrorComponent errorMessage={error} setError={vacanciesActions.setError}/>
 

@@ -1,6 +1,6 @@
 import {ResponseTypeCatalogues, ResponseTypeVacancies, VacancyInfo} from "1-DAL/vacanciesAPI";
-import {vacanciesActions, VacanciesInitialStateType, vacanciesReducer, vacanciesThunks} from "./vacanciesReducer";
-import {selectedVacanciesReducer, selectedVacanciesThunks} from "../selectedVacanciesReducer/selectedVacanciesReducer";
+import {vacanciesActions, VacanciesInitialStateType, vacanciesReducer, vacanciesThunks} from "./vacanciesSlice";
+import {selectedVacanciesReducer, selectedVacanciesThunks} from "../selectedVacanciesSlice/selectedVacanciesSlice";
 
 describe('vacanciesReducers actions test', () => {
 

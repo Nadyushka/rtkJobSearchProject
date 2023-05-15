@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import {Container, TypographyStylesProvider} from "@mantine/core";
-import {vacanciesActions, vacanciesThunks} from "2-BLL/vacancyReducer/vacanciesReducer";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacanciesSlice";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {errorVacancies, isLoadingVacancies, vacancyDataVacancies} from "2-BLL/vacancyReducer/vacancySelectors";
+import {errorVacancies, isLoadingVacancies, vacancyDataVacancies} from "2-BLL/vacanciesSlice/vacancies.selectors";
 import {LoaderComponent} from "../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../c2-commonComponents/error/ErrorComponent";
 import {VacancyItem} from "../../../c2-commonComponents/vacancyItem/VacancyItem";

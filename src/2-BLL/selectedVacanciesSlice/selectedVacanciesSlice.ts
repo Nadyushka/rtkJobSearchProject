@@ -23,7 +23,6 @@ const setSelectedVacanciesData = createAppAsyncThunk<ReturnedValue, SetSelectedV
         try {
             const localStorageSelectedVacancies = localStorage.getItem('selectedVacancies') ? localStorage.getItem('selectedVacancies') : '{selectedVacanciesArray:[]}'
             const selectedItems: VacancyInfo[] = JSON.parse(localStorageSelectedVacancies!).selectedVacanciesArray
-           console.log({ selectedItems, ls: JSON.parse(localStorageSelectedVacancies!) })
             return {objects: selectedItems, currentPage, count}
         } catch (e) {
             errorHandler(e, dispatch, selectedVacanciesActions.setError)

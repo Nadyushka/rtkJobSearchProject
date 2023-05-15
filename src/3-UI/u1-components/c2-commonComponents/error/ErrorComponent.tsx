@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {Container} from '@mantine/core';
 import {useAppDispatch} from "2-BLL/store";
 import {useStyles} from './styleErrorComponent';
 import {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 
-export const ErrorComponent = ({errorMessage, setError}: PropsType) => {
+export const ErrorComponent: FC<PropsType> = ({errorMessage, setError}) => {
 
     const dispatch = useAppDispatch()
 

@@ -15,8 +15,8 @@ import {LoaderComponent} from "../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../c2-commonComponents/error/ErrorComponent";
 import {useStyles} from "./styleLogin";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {errorAuth, isAuthorisedAuth, isLoadingAuth} from "2-BLL/authReucer/selectorsAuth";
-import {authActions, authThunks} from "2-BLL/authReucer/authReducer";
+import {errorAuth, isAuthorisedAuth, isLoadingAuth} from "2-BLL/authSlice/auth.selectors";
+import {authActions, authThunks} from "2-BLL/authSlice/authSlice";
 
 
 export const Login = () => {

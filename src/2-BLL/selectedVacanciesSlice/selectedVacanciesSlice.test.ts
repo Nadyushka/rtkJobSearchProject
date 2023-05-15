@@ -2,7 +2,7 @@ import {
     selectedVacanciesActions,
     SelectedVacanciesInitialStateType,
     selectedVacanciesReducer, selectedVacanciesThunks,
-} from "./selectedVacanciesReducer";
+} from "./selectedVacanciesSlice";
 import { SelectedVacancyInfo} from "1-DAL/vacanciesAPI";
 
 

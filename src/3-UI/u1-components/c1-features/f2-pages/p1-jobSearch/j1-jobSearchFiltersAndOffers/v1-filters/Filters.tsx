@@ -14,9 +14,9 @@ import {
     catalogueDataVacancies,
     currentPageVacancies, jobAreaVacancies, keyWordVacancies,
     pageCountVacancies, paymentFromVacancies, paymentToVacancies
-} from "2-BLL/vacancyReducer/vacancySelectors";
+} from "2-BLL/vacanciesSlice/vacancies.selectors";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacanciesSlice";
 import {useStyles} from './styleFilters';
-import {vacanciesActions, vacanciesThunks} from "../../../../../../../2-BLL/vacancyReducer/vacanciesReducer";
 
 export const Filters = () => {
 
@@ -43,7 +43,7 @@ export const Filters = () => {
     const maxSalaryInputDataAttribute = {'data-elem': 'salary-to-input'}
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
-    const onClickButtonHandler = () => {
+    const setFiltersButtonHandler = () => {
         dispatch(vacanciesThunks.setFiltredVacanciesData({
             currentPage: 1,
             count,
@@ -55,7 +55,7 @@ export const Filters = () => {
         }))
     }
 
-    const onClockClearFiltersButton = () => {
+    const removeAllFiltersButtonHandler = () => {
         dispatch(vacanciesActions.setFilters({catalogues: '', payment_from: '', payment_to: '', keyWord: ''}))
         dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count}))
         setMinSalaryValue('')
@@ -63,12 +63,16 @@ export const Filters = () => {
         setJobAreaValue('')
     }
 
+    const styleSelectButton = !vacancyAriaSelectOpen ?
+        {color: '#ACADB9', transition: '0.3s all'} :
+        {color: '#5E96FC', transform: 'rotate(180deg)', transition: '0.3s all'}
+
     return (
         <Container className={classes.filtersContainer}>
             <Box className={classes.filterTitle}>
                 <Title className={classes.filterTitleText} order={2}>Фильтры</Title>
                 <Button className={classes.filterTitleButton}
-                        onClick={onClockClearFiltersButton} {...useFiltersDataAttribute}>Сбросить данные
+                        onClick={removeAllFiltersButtonHandler} {...useFiltersDataAttribute}>Сбросить данные
                     <div className={classes.filterTitleButtonCross}/>
                 </Button>
             </Box>
@@ -85,10 +89,8 @@ export const Filters = () => {
                 searchValue={jobAreaValue}
                 nothingFound="Проверьте выбранную отрасль"
                 data={catalogueDataText}
-                transitionProps={{transition: 'pop-top-left', duration: 80, timingFunction: 'ease'}}
-                rightSection={!vacancyAriaSelectOpen ?
-                    <ChevronDown style={{color: '#ACADB9'}} size={'1rem'}/> :
-                    <ChevronUp style={{color: '#5E96FC'}} size={'1rem'}/>}
+                transitionProps={{transition: 'pop-top-left', duration: 400, timingFunction: 'ease'}}
+                rightSection={<ChevronDown style={styleSelectButton} size={'1rem'}/>}
                 rightSectionWidth={48}
                 styles={(theme) => ({
                     rightSection: {pointerEvents: 'none'},
@@ -135,7 +137,7 @@ export const Filters = () => {
                     {...maxSalaryInputDataAttribute}
                 />
             </Box>
-            <Button onClick={onClickButtonHandler} className={classes.filterButton}>Применить</Button>
+            <Button onClick={setFiltersButtonHandler} className={classes.filterButton}>Применить</Button>
         </Container>
     );
 };

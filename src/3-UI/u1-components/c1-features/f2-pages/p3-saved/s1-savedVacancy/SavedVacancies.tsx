@@ -2,16 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Container, Pagination} from '@mantine/core';
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {isAuthorisedAuth} from "2-BLL/authReucer/selectorsAuth";
+import {isAuthorisedAuth} from "2-BLL/authSlice/auth.selectors";
 import {
     selectedVacanciesActions,
     selectedVacanciesThunks
-} from "2-BLL/selectedVacanciesReducer/selectedVacanciesReducer";
+} from "2-BLL/selectedVacanciesSlice/selectedVacanciesSlice";
 import {
     currentPageSelectedVacancies,
     errorSelectedVacancies,
     isLoadingSelectedVacancies, pageCountSelectedVacancies, vacanciesDataSelectedVacancies
-} from "2-BLL/selectedVacanciesReducer/selectorsSelectedVacancies";
+} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
 import {VacancyItem} from "../../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {PATH} from "../../../../c2-commonComponents/routes/Routes";
 import {LoaderComponent} from "../../../../c2-commonComponents/loader/Loader";
@@ -35,7 +35,6 @@ export const SavedVacancies = () => {
 
     let totalPages = Math.ceil(totalVacancies / pageCount)
     const [activePage, setPage] = useState<number>(currentPage);
-
 
     let regularFirstPage = activePage * pageCount - pageCount;
     let notEnoughValuesFirstPage = activePage * pageCount - 2 * pageCount
