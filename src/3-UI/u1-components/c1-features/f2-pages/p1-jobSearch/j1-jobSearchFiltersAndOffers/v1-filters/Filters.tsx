@@ -8,14 +8,14 @@ import {
     Select,
     Title
 } from "@mantine/core";
-import {ChevronDown, ChevronUp} from 'tabler-icons-react';
+import {ChevronDown} from 'tabler-icons-react';
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
     catalogueDataVacancies,
-    currentPageVacancies, jobAreaVacancies, keyWordVacancies,
-    pageCountVacancies, paymentFromVacancies, paymentToVacancies
+    jobAreaVacancies,
+    paymentFromVacancies, paymentToVacancies
 } from "2-BLL/vacanciesSlice/vacancies.selectors";
-import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacancies.slice";
+import {vacanciesActions} from "2-BLL/vacanciesSlice/vacancies.slice";
 import {useStyles} from './styleFilters';
 
 export const Filters = () => {

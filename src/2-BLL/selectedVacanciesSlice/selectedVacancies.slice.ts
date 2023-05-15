@@ -15,7 +15,7 @@ const initialState = {
         "more": false
     },
     currentPage: 1,
-    pageCount: 3,
+    pageCount: 4,
 }
 
 const setSelectedVacanciesData = createAppAsyncThunk<ReturnedValue, SetSelectedVacanciesDataArgumentsType>(

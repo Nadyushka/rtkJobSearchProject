@@ -41,7 +41,7 @@ const initialState = {
         "vacancyRichText": '',
     } as VacancyInfo,
     currentPage: 1,
-    pageCount: 3,
+    pageCount: 4,
     payment_from: '' as number | '',
     payment_to: '' as number | '',
     jobArea: '',

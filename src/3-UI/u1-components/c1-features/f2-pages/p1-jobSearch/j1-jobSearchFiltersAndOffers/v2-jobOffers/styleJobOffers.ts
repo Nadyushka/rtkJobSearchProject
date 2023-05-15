@@ -4,7 +4,7 @@ export const useStyles = createStyles((theme) => ({
     jobSearchContainer: {
         width: '100%',
         backgroundColor: '#F7F7F8',
-        margin: '40px 0px 0px 28px',
+        margin: '40px 0px 0px 0px',
         padding: '0px',
         position: 'relative',
 

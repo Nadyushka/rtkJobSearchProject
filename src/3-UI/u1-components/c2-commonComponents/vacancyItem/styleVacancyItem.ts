@@ -4,12 +4,13 @@ export const useStyles = createStyles((theme) => ({
     vacancyItemContainer: {
         maxWidth: `773px`,
         backgroundColor: '#FFFFFF',
-        margin: '16px 0px 0px 0px',
-        padding: '24px 0px',
+        margin: '10px 0px 0px 0px',
+        padding: '20px 0px',
         border: '1px solid #EAEBED',
         borderRadius: `${rem(12)}`,
         textAlign: 'left',
         cursor: 'pointer',
+        boxSizing:'border-box',
 
         a: {
             textDecoration: 'none',
@@ -73,7 +74,7 @@ export const useStyles = createStyles((theme) => ({
     },
 
     vacancyItemInfoPlace: {
-        marginTop: '13px',
+        marginTop: '10px',
         marginLeft: '24px',
         display: 'flex',
 

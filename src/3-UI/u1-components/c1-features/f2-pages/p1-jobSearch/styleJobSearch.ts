@@ -16,14 +16,15 @@ export const useStyles = createStyles((theme) => ({
         display: 'none',
     },
 
-    jobOffers:{
+    jobOffers: {
         position: 'relative',
-        flex: '1 1 65%',
+        flex: '1 1 66%',
         maxWidth: `773px`,
 
         [`@media (max-width: ${rem(1160)})`]: {
             flex: '1 1 48%',
         },
-    }
+    },
+
 
 }))
