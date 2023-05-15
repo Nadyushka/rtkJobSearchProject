@@ -1,7 +1,9 @@
 import {SelectedVacancyInfo, VacancyInfo} from "1-DAL/vacanciesAPI";
 import {errorHandler} from "3-UI/u4-common/utilits/error";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AnyAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {createAppAsyncThunk} from "../../3-UI/u4-common/utilits/create-app-async-thunk";
+import axios from "axios";
+import {ErrorType} from "../authSlice/auth.slice";
 
 const initialState = {
     isLoading: false,
@@ -18,51 +20,42 @@ const initialState = {
 
 const setSelectedVacanciesData = createAppAsyncThunk<ReturnedValue, SetSelectedVacanciesDataArgumentsType>(
     "selectedVacancies/setSelectedVacanciesData",
-    async ({currentPage, count}, {dispatch, rejectWithValue}) => {
-        dispatch(selectedVacanciesActions.isLoading({isLoading: true}))
+    async ({currentPage, count}, {rejectWithValue}) => {
         try {
             const localStorageSelectedVacancies = localStorage.getItem('selectedVacancies') ? localStorage.getItem('selectedVacancies') : '{selectedVacanciesArray:[]}'
             const selectedItems: VacancyInfo[] = JSON.parse(localStorageSelectedVacancies!).selectedVacanciesArray
             return {objects: selectedItems, currentPage, count}
-        } catch (e) {
-            errorHandler(e, dispatch, selectedVacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(selectedVacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
 
 const removeVacancyFromSelection = createAppAsyncThunk<ReturnedValue, RemoveVacancyFromSelectionArgumentsType>(
     "selectedVacancies/removeVacancyFromSelection",
-    async ({id, currentPage, count}, {dispatch, rejectWithValue, getState}) => {
-        dispatch(selectedVacanciesActions.isLoading({isLoading: true}))
+    async ({id, currentPage, count}, {rejectWithValue, getState}) => {
         try {
             const selectedVacancies = getState().selectedVacancies.vacanciesData.objects.filter(v => v.id !== id)
             localStorage.removeItem('selectedVacancies')
             localStorage.setItem('selectedVacancies', JSON.stringify({selectedVacanciesArray: selectedVacancies}))
             return {objects: selectedVacancies, currentPage, count}
-        } catch (e) {
-            errorHandler(e, dispatch, selectedVacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(selectedVacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
 
-const addVacancyToSelected = createAppAsyncThunk<ReturnedValue,addVacancyToSelectedArgumentsType>(
+const addVacancyToSelected = createAppAsyncThunk<ReturnedValue, addVacancyToSelectedArgumentsType>(
     "selectedVacancies/addVacancyToSelected",
     async ({id, profession, payment_from, currency, type_of_work, town}, {
-        dispatch,
         rejectWithValue,
         getState
     }) => {
-        dispatch(selectedVacanciesActions.isLoading({isLoading: true}))
+        const selectedVacanciesSaved = getState().selectedVacancies.vacanciesData.objects
+        const count = getState().selectedVacancies.pageCount
+        const currentPage = 1
+
         try {
-            const count = getState().selectedVacancies.pageCount
-            const currentPage = 1
-            const selectedVacanciesSaved = getState().selectedVacancies.vacanciesData.objects
             const newVacancy = {
                 id,
                 profession,
@@ -76,11 +69,8 @@ const addVacancyToSelected = createAppAsyncThunk<ReturnedValue,addVacancyToSelec
             localStorage.removeItem('selectedVacancies')
             localStorage.setItem('selectedVacancies', JSON.stringify({selectedVacanciesArray: selectedVacancies}))
             return {objects: selectedVacancies, currentPage, count}
-        } catch (e) {
-            errorHandler(e, dispatch, selectedVacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(selectedVacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
@@ -115,22 +105,32 @@ const slice = createSlice({
             state.currentPage = action.payload.currentPage
             state.pageCount = action.payload.count
         });
-        builder.addMatcher((action) => {
+        builder.addMatcher((action: AnyAction) => {
             return action.type.endsWith('/pending')
         }, (state, action) => {
             state.isLoading = true
             state.error = ''
         });
-        builder.addMatcher((action) => {
+        builder.addMatcher((action: AnyAction) => {
             return action.type.endsWith('/rejected')
         }, (state, action) => {
             state.isLoading = false
+            const e = action.payload.error
+            if (action.payload) {
+                if (axios.isAxiosError<ErrorType>(e)) {
+                    state.error = e.response?.data ? e.response.data.error.message : e.message
+                } else {
+                    state.error = 'Some error occurred'
+                }
+            } else {
+                state.error = 'Some error occurred'
+            }
         });
-        builder.addMatcher((action) => {
+        builder.addMatcher((action: AnyAction) => {
             return action.type.endsWith('/fulfilled')
         }, (state, action) => {
             state.isLoading = false
-        });
+        })
     },
 })
 

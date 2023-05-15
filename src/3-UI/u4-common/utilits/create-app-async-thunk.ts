@@ -8,6 +8,9 @@ import {AppDispatch, AppRootStateType} from "2-BLL/store";
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     state: AppRootStateType
     dispatch: AppDispatch
-    rejectValue: null
+    rejectValue: null | ErrorType
 }>()
 
+type ErrorType = {
+    error: any
+}

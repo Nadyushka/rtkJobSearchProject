@@ -1,11 +1,12 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {AnyAction, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import axios from "axios";
 import {
     ResponseTypeCatalogues,
     ResponseTypeVacancies,
     vacancyApi,
     VacancyInfo
 } from "1-DAL/vacanciesAPI";
-import {errorHandler} from "3-UI/u4-common/utilits/error";
+import {ErrorType} from "2-BLL/authSlice/auth.slice";
 import {getDataFromLocalStorage} from "3-UI/u4-common/utilits/localStorageData";
 import {setPropertyMarkedToVacancies} from "3-UI/u4-common/utilits/setPropertyMarkedToVacancies";
 import {createAppAsyncThunk} from "3-UI/u4-common/utilits/create-app-async-thunk";
@@ -50,33 +51,25 @@ const initialState = {
 const setCatalogueData = createAppAsyncThunk<ResponseTypeCatalogues[]>(
     "vacancies/setCatalogueData",
     async (arg, {dispatch, rejectWithValue}) => {
-        dispatch(vacanciesActions.isLoading({isLoading: true}))
         try {
             let res = await vacancyApi.getCatalogues()
             return res.data
-        } catch (e) {
-            errorHandler(e, dispatch, vacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(vacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
 
-const setVacanciesData = createAppAsyncThunk<ResponseTypeVacancies, setVacanciesDataArgsType>(
+const setVacanciesData = createAppAsyncThunk<ResponseTypeVacancies, SetVacanciesDataArgsType>(
     "vacancies/setVacanciesData",
     async ({currentPage, count}, {dispatch, rejectWithValue, getState}) => {
-        dispatch(vacanciesActions.isLoading({isLoading: true}))
         const token = getState().auth.userAuthData.access_token
         try {
             const res = await vacancyApi.getVacancies(token, {page: currentPage, count})
             const vacancies = setPropertyMarkedToVacancies(res.data)
             return vacancies
-        } catch (e) {
-            errorHandler(e, dispatch, vacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(vacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
@@ -88,11 +81,13 @@ const setFiltredVacanciesData = createAppAsyncThunk<ResponseTypeVacancies>(
         rejectWithValue,
         getState
     }) => {
-        dispatch(vacanciesActions.isLoading({isLoading: true}))
+
         const token = getState().auth.userAuthData.access_token
         const {keyWord, currentPage, pageCount: count, payment_from, payment_to, jobArea} = getState().vacancies
-        const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === jobArea) ?
-            getState().vacancies.catalogueData.find(c => c.title_rus === jobArea)!.key.toString() : ''
+        const catalogueData = getState().vacancies.catalogueData
+        const catalogueID = catalogueData.find(c => c.title_rus === jobArea) ?
+            catalogueData.find(c => c.title_rus === jobArea)!.key.toString() : ''
+
         try {
             let res = await vacancyApi.getFiltredVacancies(token, {
                 page: currentPage,
@@ -105,30 +100,23 @@ const setFiltredVacanciesData = createAppAsyncThunk<ResponseTypeVacancies>(
             })
             let vacancies = setPropertyMarkedToVacancies(res.data)
             return vacancies
-        } catch (e) {
-            errorHandler(e, dispatch, vacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(vacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
 
-const setVacancyData = createAppAsyncThunk<VacancyInfo, setVacancyDataArgsType>(
+const setVacancyData = createAppAsyncThunk<VacancyInfo, SetVacancyDataArgsType>(
     "vacancies/setVacancyData",
     async ({id}, {dispatch, rejectWithValue, getState}) => {
-        dispatch(vacanciesActions.isLoading({isLoading: true}))
         const token = getState().auth.userAuthData.access_token
-        let selectedVacancies = getDataFromLocalStorage()
         try {
             let res = await vacancyApi.getVacancy(id, token)
+            let selectedVacancies = getDataFromLocalStorage()
             let vacancies = {...res.data, marked: selectedVacancies.includes(res.data.id)}
             return vacancies
-        } catch (e) {
-            errorHandler(e, dispatch, vacanciesActions.setError)
-            return rejectWithValue(null)
-        } finally {
-            dispatch(vacanciesActions.isLoading({isLoading: false}))
+        } catch (error) {
+            return rejectWithValue({error})
         }
     }
 );
@@ -164,21 +152,48 @@ const slice = createSlice({
         builder.addCase(setVacanciesData.fulfilled, (state, action) => {
             state.vacanciesData = action.payload;
         });
+
         builder.addCase(setFiltredVacanciesData.fulfilled, (state, action) => {
             state.vacanciesData = action.payload;
         });
         builder.addCase(setVacancyData.fulfilled, (state, action) => {
             state.vacancyData = action.payload;
         });
+        builder.addMatcher((action: AnyAction) => {
+            return action.type.endsWith('/pending')
+        }, (state, action) => {
+            state.isLoading = false
+            state.error = ''
+        });
+        builder.addMatcher((action: AnyAction) => {
+            return action.type.endsWith('/fulfilled')
+        }, (state, action) => {
+            state.isLoading = false
+        })
+        builder.addMatcher((action: AnyAction) => {
+            return action.type.endsWith('/rejected')
+        }, (state, action) => {
+            state.isLoading = false
+            const e = action.payload.error
+            if (action.payload) {
+                if (axios.isAxiosError<ErrorType>(e)) {
+                    state.error = e.response?.data ? e.response.data.error.message : e.message
+                } else {
+                    state.error = 'Some error occurred'
+                }
+            } else {
+                state.error = 'Some error occurred'
+            }
+        });
     },
 })
 
 export const vacanciesReducer = slice.reducer;
-export const vacanciesThunks = {setCatalogueData, setVacanciesData, setFiltredVacanciesData, setVacancyData};
 export const vacanciesActions = slice.actions;
+export const vacanciesThunks = {setCatalogueData, setVacanciesData, setFiltredVacanciesData, setVacancyData};
 
 // types
 
 export type VacanciesInitialStateType = typeof initialState
-type setVacanciesDataArgsType = { currentPage: number, count: number }
-type setVacancyDataArgsType = { id: number }
+type SetVacanciesDataArgsType = { currentPage: number, count: number }
+type SetVacancyDataArgsType = { id: number }
