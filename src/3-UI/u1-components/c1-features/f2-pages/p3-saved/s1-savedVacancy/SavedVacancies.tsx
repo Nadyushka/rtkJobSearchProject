@@ -6,7 +6,7 @@ import {isAuthorisedAuth} from "2-BLL/authSlice/auth.selectors";
 import {
     selectedVacanciesActions,
     selectedVacanciesThunks
-} from "2-BLL/selectedVacanciesSlice/selectedVacanciesSlice";
+} from "2-BLL/selectedVacanciesSlice/selectedVacancies.slice";
 import {
     currentPageSelectedVacancies,
     errorSelectedVacancies,
@@ -48,9 +48,9 @@ export const SavedVacancies = () => {
         dispatch(selectedVacanciesThunks.setSelectedVacanciesData({currentPage: 1, count: 3}))
     }, [selectedVacancies.length ])
 
-    // if (!isAuthorised) {
-    //     navigate(PATH.LOGIN)
-    // }
+    if (!isAuthorised) {
+        navigate(PATH.LOGIN)
+    }
 
     if (isLoading) {
         return <LoaderComponent/>

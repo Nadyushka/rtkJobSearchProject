@@ -2,9 +2,9 @@ import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux'
 import {AnyAction, combineReducers} from 'redux'
 import {configureStore} from '@reduxjs/toolkit'
 import {ThunkDispatch} from 'redux-thunk'
-import {authReducer} from "./authSlice/authSlice";
-import {vacanciesReducer} from "./vacanciesSlice/vacanciesSlice";
-import {selectedVacanciesReducer} from "./selectedVacanciesSlice/selectedVacanciesSlice";
+import {authReducer} from "./authSlice/auth.slice";
+import {vacanciesReducer} from "./vacanciesSlice/vacancies.slice";
+import {selectedVacanciesReducer} from "./selectedVacanciesSlice/selectedVacancies.slice";
 
 // store
 const rootReducer = combineReducers({

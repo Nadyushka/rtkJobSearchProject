@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import {Container, TypographyStylesProvider} from "@mantine/core";
-import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacanciesSlice";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacancies.slice";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {errorVacancies, isLoadingVacancies, vacancyDataVacancies} from "2-BLL/vacanciesSlice/vacancies.selectors";
 import {LoaderComponent} from "../../../c2-commonComponents/loader/Loader";

@@ -1,4 +1,4 @@
-import {authActions, AuthInitialStateType, authReducer, authThunks, userAuthDataType} from "./authSlice";
+import {authActions, AuthInitialStateType, authReducer, authThunks, userAuthDataType} from "./auth.slice";
 
 describe('authReducers actions test', () => {
 

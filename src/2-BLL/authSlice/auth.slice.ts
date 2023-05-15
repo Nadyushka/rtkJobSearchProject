@@ -60,6 +60,9 @@ const slice = createSlice({
         },
         setError: (state, action: PayloadAction<{ error: string }>) => {
             state.error = action.payload.error
+        },
+        setAuthorised: (state, action: PayloadAction<{ isAuthorised: boolean }>) => {
+            state.isAuthorised = true
         }
     },
     extraReducers: (builder) => {
@@ -70,6 +73,7 @@ const slice = createSlice({
         builder.addCase(refreshToken.fulfilled, (state, action) => {
             state.userAuthData = action.payload;
         });
+
     },
 })
 

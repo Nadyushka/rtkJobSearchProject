@@ -1,6 +1,5 @@
 import {ResponseTypeCatalogues, ResponseTypeVacancies, VacancyInfo} from "1-DAL/vacanciesAPI";
-import {vacanciesActions, VacanciesInitialStateType, vacanciesReducer, vacanciesThunks} from "./vacanciesSlice";
-import {selectedVacanciesReducer, selectedVacanciesThunks} from "../selectedVacanciesSlice/selectedVacanciesSlice";
+import {vacanciesActions, VacanciesInitialStateType, vacanciesReducer, vacanciesThunks} from "./vacancies.slice";
 
 describe('vacanciesReducers actions test', () => {
 
@@ -87,7 +86,6 @@ describe('vacanciesReducers actions test', () => {
 
     it('should set correct filters data', () => {
         const endState = vacanciesReducer(startState, vacanciesActions.setFilters({
-            keyWord: 'Manager',
             payment_from: 50000,
             payment_to: 100000,
             catalogues: 'IT'
@@ -118,9 +116,9 @@ describe('vacanciesReducers actions test', () => {
     })
 
     it('should return correct filtred vacancies data', () => {
-        const args = {currentPage: 1, count: 3, published: 1, keyWord: '', payment_from: 10, payment_to: 50, catalogues:  '' }
+        const args = {page: 1 }
 
-        const action = vacanciesThunks.setFiltredVacanciesData.fulfilled(vacanciesData, "requestId", args);
+        const action = vacanciesThunks.setFiltredVacanciesData.fulfilled(vacanciesData, "requestId", );
         const state = vacanciesReducer(startState, action);
 
         expect(state.vacanciesData).toEqual(vacanciesData)

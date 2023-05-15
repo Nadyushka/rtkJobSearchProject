@@ -16,7 +16,7 @@ import {ErrorComponent} from "../../../c2-commonComponents/error/ErrorComponent"
 import {useStyles} from "./styleLogin";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {errorAuth, isAuthorisedAuth, isLoadingAuth} from "2-BLL/authSlice/auth.selectors";
-import {authActions, authThunks} from "2-BLL/authSlice/authSlice";
+import {authActions, authThunks} from "2-BLL/authSlice/auth.slice";
 
 
 export const Login = () => {
@@ -83,6 +83,8 @@ export const Login = () => {
             </Box>
             <Group position="center" mt="md">
                 <Button disabled={isLoading} onClick={() => dispatch(authThunks.refreshToken())}>Refresh Token</Button>
+                <Button disabled={isLoading} onClick={() => dispatch(authActions.setAuthorised({isAuthorised: true}))}>
+                    Enter, if server full of 302</Button>
             </Group>
 
             <ErrorComponent errorMessage={error} setError={authActions.setError}/>

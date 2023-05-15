@@ -5,8 +5,9 @@ import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader"
 import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
 import {VacancyItem} from "../../../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacanciesSlice";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacancies.slice";
 import {
+    catalogueDataVacancies, currentPageVacancies,
     errorVacancies,
     isLoadingVacancies,
     jobAreaVacancies,
@@ -25,47 +26,37 @@ export const JobOffers = () => {
     const error = useAppSelector(errorVacancies)
     const isLoading = useAppSelector(isLoadingVacancies)
     const totalVacancies = useAppSelector(vacanciesDataVacancies).total
+    const currentPage = useAppSelector(currentPageVacancies)
     const pagesCount = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
-    const kewWord = useAppSelector(keyWordVacancies)
+    const keyWord = useAppSelector(keyWordVacancies)
+    const catalogues = useAppSelector(catalogueDataVacancies)
 
     const [activePage, setPage] = useState<number>(1);
     const totalPages = totalVacancies / pagesCount
-    const [kewWordValue, setKewWordValue] = useState<string>(kewWord)
+    const [keyWordValue, setKeyWordValue] = useState<string>(keyWord)
 
     const {classes, cx} = useStyles();
 
     const keyWordInputDataAttribute = {'data-elem': 'search-input'}
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
 
-    const setNewPageWithFiltersHandler = () => {
-        dispatch(vacanciesActions.setFilters({
-            keyWord: kewWordValue,
-            payment_from: paymentFrom,
-            payment_to: paymentTo,
-            catalogues: jobArea
-        }))
+    const setKewWordHandler = () => {
+        dispatch(vacanciesActions.setKeyWord({keyWord: keyWordValue}))
     }
 
     useEffect(() => {
-        if (jobArea.length !== 0) {
-            dispatch(vacanciesThunks.setFiltredVacanciesData({
-                currentPage: activePage,
-                count: pagesCount,
-                published: 1,
-                keyWord: kewWordValue,
-                payment_from: paymentFrom,
-                payment_to: paymentTo,
-                catalogues: jobArea
-            }))
-        } else {
+        if (catalogues.length === 0) {
             dispatch(vacanciesThunks.setCatalogueData())
-            dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count: 3}))
+            dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count: pagesCount}))
+        } else {
+            dispatch(vacanciesThunks.setFiltredVacanciesData())
         }
-        kewWord === '' && setKewWordValue('')
-    }, [activePage, paymentFrom, paymentTo, jobArea, kewWord])
+        setKeyWordValue(keyWord)
+        setPage(currentPage)
+    }, [keyWord, currentPage, currentPage, paymentFrom, paymentTo, jobArea])
 
     if (isLoading) {
         return <LoaderComponent/>
@@ -74,17 +65,15 @@ export const JobOffers = () => {
     return (
         <Container className={classes.jobSearchContainer}>
             <TextInput className={classes.inputJobName}
-                       value={kewWordValue}
-                       onChange={(e) => setKewWordValue(e.currentTarget.value)}
+                       value={keyWordValue}
+                       onChange={(e) => {
+                           setKeyWordValue(e.currentTarget.value)
+                       }}
                        size={'lg'}
                        placeholder="Введите название вакансии"
                        icon={<Search size="1rem"/>}
                        rightSection={
-                           <Button size="sm"
-                                   onClick={setNewPageWithFiltersHandler}
-                                   {...useKeyWordDataAttribute}>
-                               Поиск
-                           </Button>}
+                           <Button size="sm" onClick={setKewWordHandler}{...useKeyWordDataAttribute}>Поиск </Button>}
                        {...keyWordInputDataAttribute}
             />
             {vacancies.length > 0 && vacancies.map(({
@@ -108,8 +97,10 @@ export const JobOffers = () => {
             {vacancies.length > 0 &&
                 <Pagination className={classes.jobSearchPagination}
                             value={activePage}
-                            onChange={setPage}
-                            onClick={setNewPageWithFiltersHandler}
+                            onChange={(value) => {
+                                setPage(value)
+                                dispatch(vacanciesActions.setPage({page: value}))
+                            }}
                             total={totalPages}/>}
 
             {vacancies.length === 0 &&

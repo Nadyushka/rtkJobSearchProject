@@ -69,7 +69,7 @@ const setVacanciesData = createAppAsyncThunk<ResponseTypeVacancies, setVacancies
         dispatch(vacanciesActions.isLoading({isLoading: true}))
         const token = getState().auth.userAuthData.access_token
         try {
-            const res = await vacancyApi.getVacancies(token, {currentPage, count})
+            const res = await vacancyApi.getVacancies(token, {page: currentPage, count})
             const vacancies = setPropertyMarkedToVacancies(res.data)
             return vacancies
         } catch (e) {
@@ -81,27 +81,28 @@ const setVacanciesData = createAppAsyncThunk<ResponseTypeVacancies, setVacancies
     }
 );
 
-const setFiltredVacanciesData = createAppAsyncThunk<ResponseTypeVacancies, SetFiltredVacanciesDataArgsType>(
+const setFiltredVacanciesData = createAppAsyncThunk<ResponseTypeVacancies>(
     "vacancies/setFiltredVacanciesData",
-    async ({currentPage, count, published, keyWord, payment_from, payment_to, catalogues}, {
+    async (_, {
         dispatch,
         rejectWithValue,
         getState
     }) => {
         dispatch(vacanciesActions.isLoading({isLoading: true}))
         const token = getState().auth.userAuthData.access_token
-        const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === catalogues)!.key.toString()
+        const {keyWord, currentPage, pageCount: count, payment_from, payment_to, jobArea} = getState().vacancies
+        const catalogueID = getState().vacancies.catalogueData.find(c => c.title_rus === jobArea) ?
+            getState().vacancies.catalogueData.find(c => c.title_rus === jobArea)!.key.toString() : ''
         try {
             let res = await vacancyApi.getFiltredVacancies(token, {
-                currentPage,
+                page: currentPage,
                 count,
-                published,
+                published: 1,
                 keyword: keyWord,
                 payment_from,
                 payment_to,
                 catalogues: catalogueID
             })
-            dispatch(vacanciesActions.setFilters({keyWord, payment_from, payment_to, catalogues}))
             let vacancies = setPropertyMarkedToVacancies(res.data)
             return vacancies
         } catch (e) {
@@ -142,8 +143,14 @@ const slice = createSlice({
         setError: (state, action: PayloadAction<{ error: string }>) => {
             state.error = action.payload.error
         },
-        setFilters: (state, action: PayloadAction<{ keyWord: string | '', payment_from: number | '', payment_to: number | '', catalogues: string | '' }>) => {
+        setPage: (state, action: PayloadAction<{ page: number }>) => {
+            state.currentPage = action.payload.page
+        },
+        setKeyWord: (state, action: PayloadAction<{ keyWord: '' | string }>) => {
             state.keyWord = action.payload.keyWord
+            state.currentPage = 1
+        },
+        setFilters: (state, action: PayloadAction<{ payment_from: number | '', payment_to: number | '', catalogues: string | '' }>) => {
             state.payment_from = action.payload.payment_from
             state.payment_to = action.payload.payment_to
             state.jobArea = action.payload.catalogues
@@ -174,5 +181,4 @@ export const vacanciesActions = slice.actions;
 
 export type VacanciesInitialStateType = typeof initialState
 type setVacanciesDataArgsType = { currentPage: number, count: number }
-type SetFiltredVacanciesDataArgsType = { currentPage: number, count: number, published: number, keyWord: string | '', payment_from: number | '', payment_to: number | '', catalogues: string | '' }
 type setVacancyDataArgsType = { id: number }

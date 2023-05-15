@@ -115,6 +115,22 @@ const slice = createSlice({
             state.currentPage = action.payload.currentPage
             state.pageCount = action.payload.count
         });
+        builder.addMatcher((action) => {
+            return action.type.endsWith('/pending')
+        }, (state, action) => {
+            state.isLoading = true
+            state.error = ''
+        });
+        builder.addMatcher((action) => {
+            return action.type.endsWith('/rejected')
+        }, (state, action) => {
+            state.isLoading = false
+        });
+        builder.addMatcher((action) => {
+            return action.type.endsWith('/fulfilled')
+        }, (state, action) => {
+            state.isLoading = false
+        });
     },
 })
 

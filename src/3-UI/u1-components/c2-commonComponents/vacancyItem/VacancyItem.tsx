@@ -5,7 +5,7 @@ import selectedStar from '3-UI/u2-assets/pictures/selectedStar.svg'
 import notSelectedStar from '3-UI/u2-assets/pictures/notSelectedStar.svg'
 import locationIcon from '3-UI/u2-assets/pictures/locationIcon.svg'
 import {useNavigate} from "react-router-dom";
-import {selectedVacanciesThunks} from "2-BLL/selectedVacanciesSlice/selectedVacanciesSlice";
+import {selectedVacanciesThunks} from "2-BLL/selectedVacanciesSlice/selectedVacancies.slice";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {useStyles} from "./styleVacancyItem";
 import {
@@ -71,7 +71,7 @@ export const VacancyItem: FC<PropsType> = ({
     const vacancyIdDataAttribute = {'data-elem': `vacancy-${id}`}
 
     useEffect(() => {
-        setMark(marked)
+       setMark(marked)
     }, [marked])
 
     return (

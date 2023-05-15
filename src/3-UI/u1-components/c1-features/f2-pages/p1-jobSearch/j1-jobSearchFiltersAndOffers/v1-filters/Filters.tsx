@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -15,7 +15,7 @@ import {
     currentPageVacancies, jobAreaVacancies, keyWordVacancies,
     pageCountVacancies, paymentFromVacancies, paymentToVacancies
 } from "2-BLL/vacanciesSlice/vacancies.selectors";
-import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacanciesSlice";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacancies.slice";
 import {useStyles} from './styleFilters';
 
 export const Filters = () => {
@@ -23,12 +23,9 @@ export const Filters = () => {
     const dispatch = useAppDispatch()
 
     const catalogueDataText = useAppSelector(catalogueDataVacancies).map(catalogue => catalogue['title_rus'])
-    const currentPage = useAppSelector(currentPageVacancies)
-    const count = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
-    const keyWord = useAppSelector(keyWordVacancies)
 
     const [jobAreaValue, setJobAreaValue] = useState<string>(jobArea);
     const [minSalaryValue, setMinSalaryValue] = useState<number | ''>(paymentFrom === '' ? '' : paymentFrom);
@@ -44,11 +41,7 @@ export const Filters = () => {
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
     const setFiltersButtonHandler = () => {
-        dispatch(vacanciesThunks.setFiltredVacanciesData({
-            currentPage: 1,
-            count,
-            published: 1,
-            keyWord,
+        dispatch(vacanciesActions.setFilters({
             payment_from: minSalaryValue,
             payment_to: maxSalaryValue,
             catalogues: jobAreaValue
@@ -56,16 +49,19 @@ export const Filters = () => {
     }
 
     const removeAllFiltersButtonHandler = () => {
-        dispatch(vacanciesActions.setFilters({catalogues: '', payment_from: '', payment_to: '', keyWord: ''}))
-        dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count}))
-        setMinSalaryValue('')
-        setMaxSalaryValue('')
-        setJobAreaValue('')
+        dispatch(vacanciesActions.setFilters({catalogues: '', payment_from: '', payment_to: ''}))
+        dispatch(vacanciesActions.setKeyWord({keyWord: ''}))
     }
 
     const styleSelectButton = !vacancyAriaSelectOpen ?
-        {color: '#ACADB9', transition: '0.3s all'} :
-        {color: '#5E96FC', transform: 'rotate(180deg)', transition: '0.3s all'}
+        {color: '#ACADB9', transition: '0.2s all'} :
+        {color: '#5E96FC', transform: 'rotate(180deg)', transition: '0.2s all'}
+
+    useEffect(() => {
+        setJobAreaValue(jobArea)
+        setMinSalaryValue(paymentFrom)
+        setMaxSalaryValue(paymentTo)
+    }, [paymentFrom, paymentTo, jobArea])
 
     return (
         <Container className={classes.filtersContainer}>
@@ -89,7 +85,7 @@ export const Filters = () => {
                 searchValue={jobAreaValue}
                 nothingFound="Проверьте выбранную отрасль"
                 data={catalogueDataText}
-                transitionProps={{transition: 'pop-top-left', duration: 400, timingFunction: 'ease'}}
+                transitionProps={{transition: 'pop-top-left', duration: 200, timingFunction: 'ease'}}
                 rightSection={<ChevronDown style={styleSelectButton} size={'1rem'}/>}
                 rightSectionWidth={48}
                 styles={(theme) => ({
