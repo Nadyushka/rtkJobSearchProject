@@ -11,7 +11,7 @@ import {
 import {ChevronDown} from 'tabler-icons-react';
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
-    catalogueDataVacancies,
+    catalogueDataVacancies, isLoadingVacancies,
     jobAreaVacancies,
     paymentFromVacancies, paymentToVacancies
 } from "2-BLL/vacanciesSlice/vacancies.selectors";
@@ -26,6 +26,7 @@ export const Filters = () => {
     const paymentFrom = useAppSelector(paymentFromVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
+    const isLoading = useAppSelector(isLoadingVacancies)
 
     const [jobAreaValue, setJobAreaValue] = useState<string>(jobArea);
     const [minSalaryValue, setMinSalaryValue] = useState<number | ''>(paymentFrom === '' ? '' : paymentFrom);
@@ -118,7 +119,10 @@ export const Filters = () => {
                     className={classes.salaryInput}
                     min={0}
                     value={minSalaryValue}
-                    onChange={setMinSalaryValue}
+                    onChange={(value) => {
+                        setMinSalaryValue(value);
+                        setMaxSalaryValue(value)
+                    }}
                     step={1000}
                     {...minSalaryInputDataAttribute}
                 />
@@ -128,12 +132,17 @@ export const Filters = () => {
                     className={`${classes.salaryInput}  ${classes.salaryInputMax}`}
                     min={0}
                     value={maxSalaryValue}
-                    onChange={setMaxSalaryValue}
+                    onChange={(value) => {
+                        value > minSalaryValue ? setMaxSalaryValue(value) :
+                            setMinSalaryValue(value);
+                        setMaxSalaryValue(value)
+                    }}
                     step={1000}
                     {...maxSalaryInputDataAttribute}
                 />
             </Box>
-            <Button onClick={setFiltersButtonHandler} className={classes.filterButton}>Применить</Button>
+            <Button disabled={isLoading} onClick={setFiltersButtonHandler}
+                    className={classes.filterButton}>Применить</Button>
         </Container>
     );
 };

@@ -18,14 +18,18 @@ import {
     vacanciesDataVacancies
 } from "2-BLL/vacanciesSlice/vacancies.selectors";
 import {useStyles} from "./styleJobOffers";
+import {
+    vacanciesDataSelectedVacancies
+} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
 
 export const JobOffers = () => {
 
     const dispatch = useAppDispatch()
     const vacancies = useAppSelector(vacanciesDataVacancies).objects
+    const selectedVacancies = useAppSelector(vacanciesDataSelectedVacancies).objects
     const error = useAppSelector(errorVacancies)
     const isLoading = useAppSelector(isLoadingVacancies)
-    const totalVacancies = useAppSelector(vacanciesDataVacancies).total
+    const totalVacancies = 500
     const currentPage = useAppSelector(currentPageVacancies)
     const pagesCount = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
@@ -56,14 +60,12 @@ export const JobOffers = () => {
         }
         setKeyWordValue(keyWord)
         setPage(currentPage)
-    }, [keyWord, currentPage, currentPage, paymentFrom, paymentTo, jobArea])
+    }, [keyWord, currentPage, currentPage, paymentFrom, paymentTo, jobArea, selectedVacancies])
 
-    if (isLoading) {
-        return <LoaderComponent/>
-    }
 
     return (
         <Container className={classes.jobSearchContainer}>
+            {isLoading && <LoaderComponent/>}
             <TextInput className={classes.inputJobName}
                        value={keyWordValue}
                        onChange={(e) => {
@@ -73,7 +75,11 @@ export const JobOffers = () => {
                        placeholder="Введите название вакансии"
                        icon={<Search size="1rem"/>}
                        rightSection={
-                           <Button size="sm" onClick={setKewWordHandler}{...useKeyWordDataAttribute}>Поиск </Button>}
+                           <Button size="sm"
+                                   disabled={isLoading}
+                                   onClick={setKewWordHandler}{...useKeyWordDataAttribute}>
+                               Поиск
+                           </Button>}
                        {...keyWordInputDataAttribute}
             />
             {vacancies.length > 0 && vacancies.map(({
@@ -103,12 +109,11 @@ export const JobOffers = () => {
                             }}
                             total={totalPages}/>}
 
-            {vacancies.length === 0 &&
+            {isLoading === false && vacancies.length === 0 &&
                 <Text className={classes.jobSearchNotFound}>Упс, совпадений по заданному набору фильтров нет</Text>
-
             }
 
-            <ErrorComponent errorMessage={error} setError={vacanciesActions.setError}/>
+            <ErrorComponent errorMessage={error}/>
 
         </Container>
     );

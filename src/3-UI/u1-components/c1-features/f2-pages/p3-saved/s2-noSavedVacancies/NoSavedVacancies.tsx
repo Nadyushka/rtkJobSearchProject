@@ -4,14 +4,23 @@ import {Button, Container, Image, rem, Text} from "@mantine/core";
 import noVacanciesFoundImg from '3-UI/u2-assets/pictures/noVacanciesFoundIcon.svg'
 import {PATH} from "../../../../c2-commonComponents/routes/Routes";
 import {useStyles} from "./styleNoSavedVacancies";
+import {LoaderComponent} from "../../../../c2-commonComponents/loader/Loader";
+import {useAppSelector} from "2-BLL/store";
+import {isLoadingSelectedVacancies} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
 
 export const NoSavedVacancies = () => {
+
+    const isLoading = useAppSelector(isLoadingSelectedVacancies)
 
     const navigate = useNavigate()
 
     const {classes, cx} = useStyles();
 
     const searchMoreVacanciesHandler = () => navigate(PATH.VACANCY_SEARCH)
+
+    if (isLoading) {
+        return <LoaderComponent/>
+    }
 
     return (
         <Container className={classes.noSelectedVacancyContainer}>

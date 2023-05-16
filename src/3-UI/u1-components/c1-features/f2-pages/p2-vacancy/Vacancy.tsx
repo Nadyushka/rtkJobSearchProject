@@ -50,7 +50,7 @@ export const Vacancy = () => {
                 <div dangerouslySetInnerHTML={{__html: vacancyRichText}}/>
             </TypographyStylesProvider>
 
-            <ErrorComponent errorMessage={error} setError={vacanciesActions.setError}/>
+            <ErrorComponent errorMessage={error}/>
         </Container>
     );
 };

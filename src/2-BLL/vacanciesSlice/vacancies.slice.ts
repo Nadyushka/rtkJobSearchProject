@@ -162,7 +162,7 @@ const slice = createSlice({
         builder.addMatcher((action: AnyAction) => {
             return action.type.endsWith('/pending')
         }, (state, action) => {
-            state.isLoading = false
+            state.isLoading = true
             state.error = ''
         });
         builder.addMatcher((action: AnyAction) => {

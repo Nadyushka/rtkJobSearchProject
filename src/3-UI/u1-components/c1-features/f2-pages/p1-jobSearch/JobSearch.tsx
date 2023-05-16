@@ -10,17 +10,7 @@ import {useStyles} from "./styleJobSearch";
 
 export const JobSearch = () => {
 
-    const isAuthorised = useAppSelector(isAuthorisedAuth)
-
-    const navigate = useNavigate()
-
     const {classes, cx} = useStyles();
-
-    useEffect(() => {
-        if (!isAuthorised) {
-            navigate(PATH.LOGIN)
-        }
-    }, [isAuthorised])
 
     return (
         <Container className={classes.jobSearchContainer}>

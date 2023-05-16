@@ -31,7 +31,6 @@ export const VacancyItem: FC<PropsType> = memo(({
                                                     type_of_work,
                                                     town,
                                                     marked,
-                                                    showSelectedVacancy
                                                 }) => {
 
         const dispatch = useAppDispatch()
@@ -42,10 +41,9 @@ export const VacancyItem: FC<PropsType> = memo(({
 
         const onClickVacancyHandler = () => navigate(`/selectedVacancy/${id}`);
 
-        const [mark, setMark] = useState<boolean>(false)
-
         const toggleSelectVacancies = (e: MouseEvent<HTMLImageElement>) => {
-            if (showSelectedVacancy) {
+            e.stopPropagation();
+            if (marked) {
                 dispatch(selectedVacanciesThunks.removeVacancyFromSelection({id, currentPage, count}))
             }
             if (!marked) {
@@ -58,27 +56,20 @@ export const VacancyItem: FC<PropsType> = memo(({
                     town
                 }))
             }
-            if (!showSelectedVacancy && marked) {
-                dispatch(selectedVacanciesThunks.removeVacancyFromSelection({id, currentPage, count}))
-            }
-            e.stopPropagation();
-            setMark(!mark)
+
         }
 
         const {classes, cx} = useStyles();
 
         const vacancyIdDataAttribute = {'data-elem': `vacancy-${id}`}
 
-        useEffect(() => {
-            setMark(marked)
-        }, [marked])
 
         return (
             <Container className={classes.vacancyItemContainer} onClick={onClickVacancyHandler} {...vacancyIdDataAttribute}>
                 <Box className={classes.vacancyItemInfo}>
                     <Title className={classes.vacancyItemContainerTitle} order={3}>{professionName}</Title>
                     <img className={classes.vacancyItemSelectImg}
-                         src={mark ? selectedStar : notSelectedStar}
+                         src={marked ? selectedStar : notSelectedStar}
                          onClick={toggleSelectVacancies}
                          data-elem={`vacancy-${id}-shortlist-button`}
                     />

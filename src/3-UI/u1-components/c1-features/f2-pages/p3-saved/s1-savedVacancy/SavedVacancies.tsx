@@ -2,9 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Container, Pagination} from '@mantine/core';
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
-import {isAuthorisedAuth} from "2-BLL/authSlice/auth.selectors";
 import {
-    selectedVacanciesActions,
     selectedVacanciesThunks
 } from "2-BLL/selectedVacanciesSlice/selectedVacancies.slice";
 import {
@@ -21,7 +19,6 @@ import {useStyles} from './styleSavedVacancies';
 export const SavedVacancies = () => {
 
     const dispatch = useAppDispatch()
-    const isAuthorised = useAppSelector(isAuthorisedAuth)
     const isLoading = useAppSelector(isLoadingSelectedVacancies)
     const error = useAppSelector(errorSelectedVacancies)
     const selectedVacancies = useAppSelector(vacanciesDataSelectedVacancies).objects
@@ -45,12 +42,8 @@ export const SavedVacancies = () => {
         if (selectedVacancies.length === 0) {
             navigate(PATH.NO_SELECTED_VACANCIES)
         }
-        dispatch(selectedVacanciesThunks.setSelectedVacanciesData({currentPage: 1, count: 3}))
-    }, [selectedVacancies.length ])
-
-    if (!isAuthorised) {
-        navigate(PATH.LOGIN)
-    }
+        dispatch(selectedVacanciesThunks.setSelectedVacanciesData({currentPage: 1, count: 4}))
+    }, [selectedVacancies.length])
 
     if (isLoading) {
         return <LoaderComponent/>
@@ -79,7 +72,7 @@ export const SavedVacancies = () => {
                         total={totalPages}
             />
 
-            <ErrorComponent errorMessage={error} setError={selectedVacanciesActions.setError}/>
+            <ErrorComponent errorMessage={error}/>
 
         </Container>
     );

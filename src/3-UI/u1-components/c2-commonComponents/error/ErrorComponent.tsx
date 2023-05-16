@@ -4,7 +4,7 @@ import {useAppDispatch} from "2-BLL/store";
 import {useStyles} from './styleErrorComponent';
 import {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 
-export const ErrorComponent: FC<PropsType> = ({errorMessage, setError}) => {
+export const ErrorComponent: FC<PropsType> = ({errorMessage}) => {
 
     const dispatch = useAppDispatch()
 
@@ -21,7 +21,6 @@ export const ErrorComponent: FC<PropsType> = ({errorMessage, setError}) => {
 
         setTimeout(() => {
             closeError()
-            dispatch(setError({error: ''}))
         }, 6000)
 
     }, [closeError, errorMessage])
@@ -37,5 +36,4 @@ export const ErrorComponent: FC<PropsType> = ({errorMessage, setError}) => {
 
 type PropsType = {
     errorMessage: string,
-    setError: ActionCreatorWithPayload<{ error: string; }, string>
 }
