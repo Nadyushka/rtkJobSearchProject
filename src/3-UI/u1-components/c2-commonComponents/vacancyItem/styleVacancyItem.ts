@@ -11,6 +11,7 @@ export const useStyles = createStyles((theme) => ({
         textAlign: 'left',
         cursor: 'pointer',
         boxSizing:'border-box',
+        position: 'relative',
 
         a: {
             textDecoration: 'none',

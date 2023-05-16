@@ -58,7 +58,7 @@ export const JobOffers = () => {
         }
         setKeyWordValue(keyWord)
         setPage(currentPage)
-    }, [keyWord, currentPage, currentPage, paymentFrom, paymentTo, jobArea, selectedVacancies])
+    }, [keyWord, currentPage, currentPage, paymentFrom, paymentTo, jobArea])
 
 
     return (

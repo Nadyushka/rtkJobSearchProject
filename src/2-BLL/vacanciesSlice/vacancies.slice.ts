@@ -10,6 +10,7 @@ import {ErrorType} from "2-BLL/authSlice/auth.slice";
 import {getDataFromLocalStorage} from "3-UI/u4-common/utilits/localStorageData";
 import {setPropertyMarkedToVacancies} from "3-UI/u4-common/utilits/setPropertyMarkedToVacancies";
 import {createAppAsyncThunk} from "3-UI/u4-common/utilits/create-app-async-thunk";
+import {selectedVacanciesThunks} from "../selectedVacanciesSlice/selectedVacancies.slice";
 
 const initialState = {
     isLoading: false,
@@ -158,6 +159,24 @@ const slice = createSlice({
         });
         builder.addCase(setVacancyData.fulfilled, (state, action) => {
             state.vacancyData = action.payload;
+        });
+        builder.addCase(selectedVacanciesThunks.removeVacancyFromSelection.fulfilled, (state, action) => {
+            if (state.vacanciesData.objects.length !== 0) {
+                let index = state.vacanciesData.objects.findIndex(vacancy => vacancy.id === action.payload.id)
+                state.vacanciesData.objects[index].marked = false
+            }
+            if (state.vacancyData.id !== 0) {
+                state.vacancyData.marked = false
+            }
+        });
+        builder.addCase(selectedVacanciesThunks.addVacancyToSelected.fulfilled, (state, action) => {
+            if (state.vacanciesData.objects.length !== 0) {
+                let index = state.vacanciesData.objects.findIndex(vacancy => vacancy.id === action.payload.id)
+                state.vacanciesData.objects[index].marked = true
+            }
+            if (state.vacancyData.id !== 0) {
+                state.vacancyData.marked = true
+            }
         });
         builder.addMatcher((action: AnyAction) => {
             return action.type.endsWith('/pending')

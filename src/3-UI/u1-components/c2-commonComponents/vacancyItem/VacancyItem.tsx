@@ -12,6 +12,8 @@ import {
     pageCountSelectedVacancies
 } from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
 import {useStyles} from "./styleVacancyItem";
+import {LoaderComponent} from "../loader/Loader";
+import {isLoadingVacancies} from "../../../../2-BLL/vacanciesSlice/vacancies.selectors";
 
 type PropsType = {
     id: number

@@ -38,7 +38,7 @@ const removeVacancyFromSelection = createAppAsyncThunk<ReturnedValue, RemoveVaca
             const selectedVacancies = getState().selectedVacancies.vacanciesData.objects.filter(v => v.id !== id)
             localStorage.removeItem('selectedVacancies')
             localStorage.setItem('selectedVacancies', JSON.stringify({selectedVacanciesArray: selectedVacancies}))
-            return {objects: selectedVacancies, currentPage, count}
+            return {objects: selectedVacancies, currentPage, count, id}
         } catch (error) {
             return rejectWithValue({error})
         }
@@ -68,7 +68,7 @@ const addVacancyToSelected = createAppAsyncThunk<ReturnedValue, addVacancyToSele
             const selectedVacancies: SelectedVacancyInfo[] = [newVacancy, ...selectedVacanciesSaved]
             localStorage.removeItem('selectedVacancies')
             localStorage.setItem('selectedVacancies', JSON.stringify({selectedVacanciesArray: selectedVacancies}))
-            return {objects: selectedVacancies, currentPage, count}
+            return {objects: selectedVacancies, currentPage, count, id}
         } catch (error) {
             return rejectWithValue({error})
         }
@@ -144,4 +144,4 @@ export type SelectedVacanciesInitialStateType = typeof initialState
 type SetSelectedVacanciesDataArgumentsType = { currentPage: number, count: number }
 type RemoveVacancyFromSelectionArgumentsType = { id: number, currentPage: number, count: number }
 type addVacancyToSelectedArgumentsType = { id: number, profession: string, payment_from: number | "", currency: "rub" | "uah" | "uzs", type_of_work: string, town: string }
-type ReturnedValue = { objects: SelectedVacancyInfo[], currentPage: number, count: number }
+type ReturnedValue = { objects: SelectedVacancyInfo[], currentPage: number, count: number, id?: number }
