@@ -1,8 +1,8 @@
 import {Route, Routes} from "react-router-dom";
+import {Container} from "@mantine/core";
 import {JobSearch} from "../../c1-features/f2-pages/p1-jobSearch/JobSearch";
 import {Vacancy} from "../../c1-features/f2-pages/p2-vacancy/Vacancy";
 import {SavedVacancies} from "../../c1-features/f2-pages/p3-saved/s1-savedVacancy/SavedVacancies";
-import {Container} from "@mantine/core";
 import {NoSavedVacancies} from "../../c1-features/f2-pages/p3-saved/s2-noSavedVacancies/NoSavedVacancies";
 import {useStyles} from "./styleRoutes";
 

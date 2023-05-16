@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Search} from 'tabler-icons-react';
+import {useStyles} from "./styleJobOffers";
 import {Button, Container, Pagination, Text, TextInput} from '@mantine/core';
 import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
@@ -17,11 +18,7 @@ import {
     paymentToVacancies,
     vacanciesDataVacancies
 } from "2-BLL/vacanciesSlice/vacancies.selectors";
-import {useStyles} from "./styleJobOffers";
-import {
-    vacanciesDataSelectedVacancies
-} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
-import {NoSavedVacancies} from "../../../p3-saved/s2-noSavedVacancies/NoSavedVacancies";
+import {vacanciesDataSelectedVacancies} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
 
 export const JobOffers = () => {
 
