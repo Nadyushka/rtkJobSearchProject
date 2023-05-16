@@ -69,7 +69,7 @@ export const Filters = () => {
             <Box className={classes.filterTitle}>
                 <Title className={classes.filterTitleText} order={2}>Фильтры</Title>
                 <Button className={classes.filterTitleButton}
-                        onClick={removeAllFiltersButtonHandler} {...useFiltersDataAttribute}>Сбросить данные
+                        onClick={removeAllFiltersButtonHandler}>Сбросить данные
                     <div className={classes.filterTitleButtonCross}/>
                 </Button>
             </Box>
@@ -142,7 +142,10 @@ export const Filters = () => {
                 />
             </Box>
             <Button disabled={isLoading} onClick={setFiltersButtonHandler}
-                    className={classes.filterButton}>Применить</Button>
+                    className={classes.filterButton}
+                    {...useFiltersDataAttribute}>
+                Применить
+            </Button>
         </Container>
     );
 };

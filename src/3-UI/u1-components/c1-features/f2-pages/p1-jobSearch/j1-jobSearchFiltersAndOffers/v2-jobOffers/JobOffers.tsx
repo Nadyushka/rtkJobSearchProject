@@ -21,6 +21,7 @@ import {useStyles} from "./styleJobOffers";
 import {
     vacanciesDataSelectedVacancies
 } from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
+import {NoSavedVacancies} from "../../../p3-saved/s2-noSavedVacancies/NoSavedVacancies";
 
 export const JobOffers = () => {
 
