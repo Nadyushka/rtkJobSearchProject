@@ -2,7 +2,7 @@ import {
     selectedVacanciesActions,
     SelectedVacanciesInitialStateType,
     selectedVacanciesReducer, selectedVacanciesThunks,
-} from "./selectedVacanciesReducer";
+} from "./selectedVacancies.slice";
 import { SelectedVacancyInfo} from "1-DAL/vacanciesAPI";
 
 
@@ -59,7 +59,6 @@ describe('selectedVacanciesReducers actions test', () => {
         expect(state.vacanciesData.objects).toEqual(returnedValue.objects)
         expect(state.currentPage).toBe(1)
         expect(state.pageCount).toBe(3)
-
     })
 
 })

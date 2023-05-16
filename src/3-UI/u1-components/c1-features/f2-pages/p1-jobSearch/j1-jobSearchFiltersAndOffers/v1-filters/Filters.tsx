@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -8,14 +8,14 @@ import {
     Select,
     Title
 } from "@mantine/core";
-import {ChevronDown, ChevronUp} from 'tabler-icons-react';
-import {setFiltersAC, setFiltredVacanciesDataTC, setVacanciesDataTC} from "2-BLL/vacancyReducer/vacanciesReducer";
+import {ChevronDown} from 'tabler-icons-react';
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
 import {
-    catalogueDataVacancies,
-    currentPageVacancies, jobAreaVacancies, keyWordVacancies,
-    pageCountVacancies, paymentFromVacancies, paymentToVacancies
-} from "2-BLL/vacancyReducer/vacancySelectors";
+    catalogueDataVacancies, isLoadingVacancies,
+    jobAreaVacancies,
+    paymentFromVacancies, paymentToVacancies
+} from "2-BLL/vacanciesSlice/vacancies.selectors";
+import {vacanciesActions} from "2-BLL/vacanciesSlice/vacancies.slice";
 import {useStyles} from './styleFilters';
 
 export const Filters = () => {
@@ -23,12 +23,10 @@ export const Filters = () => {
     const dispatch = useAppDispatch()
 
     const catalogueDataText = useAppSelector(catalogueDataVacancies).map(catalogue => catalogue['title_rus'])
-    const currentPage = useAppSelector(currentPageVacancies)
-    const count = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
-    const keyWord = useAppSelector(keyWordVacancies)
+    const isLoading = useAppSelector(isLoadingVacancies)
 
     const [jobAreaValue, setJobAreaValue] = useState<string>(jobArea);
     const [minSalaryValue, setMinSalaryValue] = useState<number | ''>(paymentFrom === '' ? '' : paymentFrom);
@@ -43,24 +41,35 @@ export const Filters = () => {
     const maxSalaryInputDataAttribute = {'data-elem': 'salary-to-input'}
     const useFiltersDataAttribute = {'data-elem': 'search-button'}
 
-    const onClickButtonHandler = () => {
-        dispatch(setFiltredVacanciesDataTC(1, count, 1, keyWord, minSalaryValue, maxSalaryValue, jobAreaValue))
+    const setFiltersButtonHandler = () => {
+        dispatch(vacanciesActions.setFilters({
+            payment_from: minSalaryValue,
+            payment_to: maxSalaryValue,
+            catalogues: jobAreaValue
+        }))
     }
 
-    const onClockClearFiltersButton = () => {
-        dispatch(setFiltersAC('', '', '', ''))
-        dispatch(setVacanciesDataTC(1, count))
-        setMinSalaryValue('')
-        setMaxSalaryValue('')
-        setJobAreaValue('')
+    const removeAllFiltersButtonHandler = () => {
+        dispatch(vacanciesActions.setFilters({catalogues: '', payment_from: '', payment_to: ''}))
+        dispatch(vacanciesActions.setKeyWord({keyWord: ''}))
     }
+
+    const styleSelectButton = !vacancyAriaSelectOpen ?
+        {color: '#ACADB9', transition: '0.2s all'} :
+        {color: '#5E96FC', transform: 'rotate(180deg)', transition: '0.2s all'}
+
+    useEffect(() => {
+        setJobAreaValue(jobArea)
+        setMinSalaryValue(paymentFrom)
+        setMaxSalaryValue(paymentTo)
+    }, [paymentFrom, paymentTo, jobArea])
 
     return (
         <Container className={classes.filtersContainer}>
             <Box className={classes.filterTitle}>
                 <Title className={classes.filterTitleText} order={2}>Фильтры</Title>
                 <Button className={classes.filterTitleButton}
-                        onClick={onClockClearFiltersButton} {...useFiltersDataAttribute}>Сбросить данные
+                        onClick={removeAllFiltersButtonHandler}>Сбросить данные
                     <div className={classes.filterTitleButtonCross}/>
                 </Button>
             </Box>
@@ -77,10 +86,8 @@ export const Filters = () => {
                 searchValue={jobAreaValue}
                 nothingFound="Проверьте выбранную отрасль"
                 data={catalogueDataText}
-                transitionProps={{transition: 'pop-top-left', duration: 80, timingFunction: 'ease'}}
-                rightSection={!vacancyAriaSelectOpen ?
-                    <ChevronDown style={{color: '#ACADB9'}} size={'1rem'}/> :
-                    <ChevronUp style={{color: '#5E96FC'}} size={'1rem'}/>}
+                transitionProps={{transition: 'pop-top-left', duration: 200, timingFunction: 'ease'}}
+                rightSection={<ChevronDown style={styleSelectButton} size={'1rem'}/>}
                 rightSectionWidth={48}
                 styles={(theme) => ({
                     rightSection: {pointerEvents: 'none'},
@@ -112,7 +119,10 @@ export const Filters = () => {
                     className={classes.salaryInput}
                     min={0}
                     value={minSalaryValue}
-                    onChange={setMinSalaryValue}
+                    onChange={(value) => {
+                        setMinSalaryValue(value);
+                        setMaxSalaryValue(value)
+                    }}
                     step={1000}
                     {...minSalaryInputDataAttribute}
                 />
@@ -122,12 +132,20 @@ export const Filters = () => {
                     className={`${classes.salaryInput}  ${classes.salaryInputMax}`}
                     min={0}
                     value={maxSalaryValue}
-                    onChange={setMaxSalaryValue}
+                    onChange={(value) => {
+                        value > minSalaryValue ? setMaxSalaryValue(value) :
+                            setMinSalaryValue(value);
+                        setMaxSalaryValue(value)
+                    }}
                     step={1000}
                     {...maxSalaryInputDataAttribute}
                 />
             </Box>
-            <Button onClick={onClickButtonHandler} className={classes.filterButton}>Применить</Button>
+            <Button disabled={isLoading} onClick={setFiltersButtonHandler}
+                    className={classes.filterButton}
+                    {...useFiltersDataAttribute}>
+                Применить
+            </Button>
         </Container>
     );
 };

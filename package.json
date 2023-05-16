@@ -2,7 +2,7 @@
   "name": "job-search",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Nadyushka.github.io/job-search-project",
+  "homepage": "https://Nadyushka.github.io/rtkJobSearchRroject",
   "dependencies": {
     "@emotion/react": "^11.10.8",
     "@mantine/core": "^6.0.9",

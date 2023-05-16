@@ -3,15 +3,11 @@ import {Search} from 'tabler-icons-react';
 import {Button, Container, Pagination, Text, TextInput} from '@mantine/core';
 import {LoaderComponent} from "../../../../../c2-commonComponents/loader/Loader";
 import {ErrorComponent} from "../../../../../c2-commonComponents/error/ErrorComponent";
-import {VacancyItem} from "../../../../../c2-commonComponents/openVacancy/vacancyItem/VacancyItem";
+import {VacancyItem} from "../../../../../c2-commonComponents/vacancyItem/VacancyItem";
 import {useAppDispatch, useAppSelector} from "2-BLL/store";
+import {vacanciesActions, vacanciesThunks} from "2-BLL/vacanciesSlice/vacancies.slice";
 import {
-    setCatalogueDataTC, setErrorVacancyAC, setFiltersAC,
-    setFiltredVacanciesDataTC,
-    setVacanciesDataTC
-} from "2-BLL/vacancyReducer/vacanciesReducer";
-import {
-    currentPageVacancies,
+    catalogueDataVacancies, currentPageVacancies,
     errorVacancies,
     isLoadingVacancies,
     jobAreaVacancies,
@@ -20,61 +16,69 @@ import {
     paymentFromVacancies,
     paymentToVacancies,
     vacanciesDataVacancies
-} from "2-BLL/vacancyReducer/vacancySelectors";
+} from "2-BLL/vacanciesSlice/vacancies.selectors";
 import {useStyles} from "./styleJobOffers";
+import {
+    vacanciesDataSelectedVacancies
+} from "2-BLL/selectedVacanciesSlice/selectedVacancies.selectors";
+import {NoSavedVacancies} from "../../../p3-saved/s2-noSavedVacancies/NoSavedVacancies";
 
 export const JobOffers = () => {
 
     const dispatch = useAppDispatch()
     const vacancies = useAppSelector(vacanciesDataVacancies).objects
+    const selectedVacancies = useAppSelector(vacanciesDataSelectedVacancies).objects
     const error = useAppSelector(errorVacancies)
     const isLoading = useAppSelector(isLoadingVacancies)
-    const totalVacancies = useAppSelector(vacanciesDataVacancies).total
+    const totalVacancies = 500
+    const currentPage = useAppSelector(currentPageVacancies)
     const pagesCount = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
     const paymentTo = useAppSelector(paymentToVacancies)
     const jobArea = useAppSelector(jobAreaVacancies)
-    const kewWord = useAppSelector(keyWordVacancies)
+    const keyWord = useAppSelector(keyWordVacancies)
+    const catalogues = useAppSelector(catalogueDataVacancies)
 
     const [activePage, setPage] = useState<number>(1);
     const totalPages = totalVacancies / pagesCount
-    const [kewWordValue, setKewWordValue] = useState<string>(kewWord)
+    const [keyWordValue, setKeyWordValue] = useState<string>(keyWord)
 
     const {classes, cx} = useStyles();
 
     const keyWordInputDataAttribute = {'data-elem': 'search-input'}
     const useKeyWordDataAttribute = {'data-elem': 'search-button'}
 
-    const pageOnClickHandler = () => {
-        dispatch(setFiltersAC(kewWordValue, paymentFrom, paymentTo, jobArea))
+    const setKewWordHandler = () => {
+        dispatch(vacanciesActions.setKeyWord({keyWord: keyWordValue}))
     }
 
     useEffect(() => {
-        if (jobArea.length !== 0) {
-            dispatch(setFiltredVacanciesDataTC(activePage, pagesCount, 1, kewWordValue, paymentFrom, paymentTo, jobArea))
+        if (catalogues.length === 0) {
+            dispatch(vacanciesThunks.setCatalogueData())
+            dispatch(vacanciesThunks.setVacanciesData({currentPage: 1, count: pagesCount}))
         } else {
-            dispatch(setCatalogueDataTC())
-            dispatch(setVacanciesDataTC(activePage, pagesCount))
+            dispatch(vacanciesThunks.setFiltredVacanciesData())
         }
-        kewWord === '' && setKewWordValue('')
-    }, [activePage, paymentFrom, paymentTo, jobArea, kewWord])
+        setKeyWordValue(keyWord)
+        setPage(currentPage)
+    }, [keyWord, currentPage, currentPage, paymentFrom, paymentTo, jobArea, selectedVacancies])
 
-    if (isLoading) {
-        return <LoaderComponent/>
-    }
 
     return (
         <Container className={classes.jobSearchContainer}>
+            {isLoading && <LoaderComponent/>}
             <TextInput className={classes.inputJobName}
-                       value={kewWordValue}
-                       onChange={(e) => setKewWordValue(e.currentTarget.value)}
+                       value={keyWordValue}
+                       onChange={(e) => {
+                           setKeyWordValue(e.currentTarget.value)
+                       }}
                        size={'lg'}
                        placeholder="Введите название вакансии"
                        icon={<Search size="1rem"/>}
                        rightSection={
                            <Button size="sm"
-                                   onClick={pageOnClickHandler}
-                                   {...useKeyWordDataAttribute}>
+                                   disabled={isLoading}
+                                   onClick={setKewWordHandler}{...useKeyWordDataAttribute}>
                                Поиск
                            </Button>}
                        {...keyWordInputDataAttribute}
@@ -100,14 +104,17 @@ export const JobOffers = () => {
             {vacancies.length > 0 &&
                 <Pagination className={classes.jobSearchPagination}
                             value={activePage}
-                            onChange={setPage}
-                            onClick={pageOnClickHandler}
+                            onChange={(value) => {
+                                setPage(value)
+                                dispatch(vacanciesActions.setPage({page: value}))
+                            }}
                             total={totalPages}/>}
 
-            {vacancies.length === 0 &&
-                <Text className={classes.jobSearchNotFound}>Совпадений по заданному набору фильтров нет</Text>}
+            {isLoading === false && vacancies.length === 0 &&
+                <Text className={classes.jobSearchNotFound}>Упс, совпадений по заданному набору фильтров нет</Text>
+            }
 
-            {/*<ErrorComponent errorMessage={error} setError={setErrorVacancyAC}/>*/}
+            <ErrorComponent errorMessage={error}/>
 
         </Container>
     );

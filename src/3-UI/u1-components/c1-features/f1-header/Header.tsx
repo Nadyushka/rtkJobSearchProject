@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 import {NavLink, useLocation} from 'react-router-dom'
 import {Header, Container, Burger, Group, Box, Transition, Paper} from '@mantine/core';
 import {useDisclosure} from '@mantine/hooks';
@@ -6,7 +6,7 @@ import appIcon from '3-UI/u2-assets/pictures/appIcon.svg'
 import {PATH} from '3-UI/u1-components/c2-commonComponents/routes/Routes';
 import {useStyles} from './styleHeader';
 
-export function HeaderSimple({links}: HeaderSimplePropsTypes) {
+export const HeaderSimple: FC<HeaderSimplePropsTypes> = ({links}) => {
 
     const {pathname} = useLocation()
     const [opened, {toggle}] = useDisclosure(false);

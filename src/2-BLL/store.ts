@@ -1,10 +1,10 @@
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux'
 import {AnyAction, combineReducers} from 'redux'
 import {configureStore} from '@reduxjs/toolkit'
-import {ThunkAction, ThunkDispatch} from 'redux-thunk'
-import {authReducer} from "./authReucer/authReducer";
-import {vacanciesReducer} from "./vacancyReducer/vacanciesReducer";
-import {selectedVacanciesReducer} from "./selectedVacanciesReducer/selectedVacanciesReducer";
+import {ThunkDispatch} from 'redux-thunk'
+import {authReducer} from "./authSlice/auth.slice";
+import {vacanciesReducer} from "./vacanciesSlice/vacancies.slice";
+import {selectedVacanciesReducer} from "./selectedVacanciesSlice/selectedVacancies.slice";
 
 // store
 const rootReducer = combineReducers({
@@ -15,6 +15,7 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
     reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>  getDefaultMiddleware({serializableCheck: false}),
 })
 
 //custom hooks
@@ -23,15 +24,9 @@ export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelecto
 
 // types
 export type AppDispatch = typeof store.dispatch
-export type AppStateType = ReturnType<typeof store.getState>
 export type AppRootStateType = ReturnType<typeof rootReducer>
 export type AppThunkDispatchType = ThunkDispatch<AppRootStateType, any, AnyAction>
-export type AppThunk<ReturnType = void> = ThunkAction<
-    ReturnType,
-    AppRootStateType,
-    unknown,
-    AnyAction
->
+
 
 //@ts-ignore
 window.store = store

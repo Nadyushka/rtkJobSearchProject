@@ -2,6 +2,10 @@ interface LocalStorage {
     [key: string]: string;
 }
 
+/**
+ * Function create local storage for tests
+ */
+
 const mock = (() => {
     let store: LocalStorage = {};
     return {

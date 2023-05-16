@@ -3,7 +3,8 @@ import crossIcon from "../../../../../../u2-assets/pictures/cross.svg";
 
 export const useStyles = createStyles((theme) => ({
     filtersContainer: {
-        width: `${rem(315)}`,
+        boxSizing: 'border-box',
+        width: ` ${rem(315)}`,
         borderRadius: `${rem(12)} ${rem(12)} ${rem(12)} ${rem(12)}`,
         padding: `${rem(20)}`,
         backgroundColor: 'white',
