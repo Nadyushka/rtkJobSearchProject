@@ -8,6 +8,10 @@ export const useStyles = createStyles((theme) => ({
         padding: '0px',
         position: 'relative',
 
+        [`@media (max-width: ${rem(1190)})`]: {
+            marginLeft: '20px'
+        },
+
         [`@media (max-width: ${rem(1160)})`]: {
             flex: '1 1 48%',
         },

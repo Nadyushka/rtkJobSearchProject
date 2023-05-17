@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import {HeaderSimple} from "../c1-features/f1-header/Header";
-import { RoutesComponent} from "../c2-commonComponents/routes/Routes";
+import {RoutesComponent} from "../c2-commonComponents/routes/Routes";
 import {authThunks} from "2-BLL/authSlice/auth.slice";
 import {useAppDispatch} from "2-BLL/store";
 
@@ -13,7 +13,7 @@ export function App() {
         {link: '/vacancySearch', label: 'Поиск Вакансий'},
         {link: '/selectedVacancies', label: 'Избранное'}]
 
-    useEffect(()=>{
+    useEffect(() => {
             dispatch(authThunks.authorisedWithPassword({
                 login: 'sergei.stralenia@gmail.com',
                 password: 'paralect123',
@@ -22,12 +22,12 @@ export function App() {
                 hr: 0
             }))
         }
-        ,[])
+        , [])
 
     return (
         <div className="App">
-                <HeaderSimple links={appLinks}/>
-                <RoutesComponent/>
+            <HeaderSimple links={appLinks}/>
+            <RoutesComponent/>
         </div>
     );
 }

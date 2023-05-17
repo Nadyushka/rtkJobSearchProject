@@ -18,7 +18,7 @@ const initialState = {
 
 const authorisedWithPassword = createAppAsyncThunk<ResponseTypeAuth, AuthorisedWithPasswordArgsType>(
     "auth/authorisedWithPassword",
-    async ({login, password, client_id, client_secret, hr}, {rejectWithValue}) => {
+    async ({login, password, client_id, client_secret, hr}, {rejectWithValue, getState}) => {
         try {
             let res = await authApi.authorisedWithPassword({login, password, client_id, client_secret, hr})
             return res.data

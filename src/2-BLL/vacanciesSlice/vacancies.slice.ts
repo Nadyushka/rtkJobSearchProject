@@ -10,6 +10,7 @@ import {ErrorType} from "2-BLL/authSlice/auth.slice";
 import {getDataFromLocalStorage} from "3-UI/u4-common/utilits/localStorageData";
 import {setPropertyMarkedToVacancies} from "3-UI/u4-common/utilits/setPropertyMarkedToVacancies";
 import {createAppAsyncThunk} from "3-UI/u4-common/utilits/create-app-async-thunk";
+import {checkTokenValidity} from "3-UI/u4-common/utilits/checkTokenValidity";
 import {selectedVacanciesThunks} from "../selectedVacanciesSlice/selectedVacancies.slice";
 
 const initialState = {
@@ -51,7 +52,7 @@ const initialState = {
 
 const setCatalogueData = createAppAsyncThunk<ResponseTypeCatalogues[]>(
     "vacancies/setCatalogueData",
-    async (arg, {dispatch, rejectWithValue}) => {
+    async (arg, {rejectWithValue}) => {
         try {
             let res = await vacancyApi.getCatalogues()
             return res.data
@@ -64,7 +65,11 @@ const setCatalogueData = createAppAsyncThunk<ResponseTypeCatalogues[]>(
 const setVacanciesData = createAppAsyncThunk<ResponseTypeVacancies, SetVacanciesDataArgsType>(
     "vacancies/setVacanciesData",
     async ({currentPage, count}, {dispatch, rejectWithValue, getState}) => {
+
         const token = getState().auth.userAuthData.access_token
+        let ttl = getState().auth.userAuthData.ttl
+        checkTokenValidity(ttl, dispatch)
+
         try {
             const res = await vacancyApi.getVacancies(token, {page: currentPage, count})
             const vacancies = setPropertyMarkedToVacancies(res.data)
