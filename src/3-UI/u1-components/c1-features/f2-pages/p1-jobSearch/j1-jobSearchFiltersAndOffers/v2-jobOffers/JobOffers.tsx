@@ -27,7 +27,7 @@ export const JobOffers = () => {
     const selectedVacancies = useAppSelector(vacanciesDataSelectedVacancies).objects
     const error = useAppSelector(errorVacancies)
     const isLoading = useAppSelector(isLoadingVacancies)
-    const totalVacancies = 500
+    const totalVacancies = useAppSelector(vacanciesDataVacancies).total
     const currentPage = useAppSelector(currentPageVacancies)
     const pagesCount = useAppSelector(pageCountVacancies)
     const paymentFrom = useAppSelector(paymentFromVacancies)
@@ -37,7 +37,8 @@ export const JobOffers = () => {
     const catalogues = useAppSelector(catalogueDataVacancies)
 
     const [activePage, setPage] = useState<number>(1);
-    const totalPages = totalVacancies / pagesCount
+    const maxVacancies = 500;
+    const totalPages = totalVacancies  > maxVacancies  ? maxVacancies / pagesCount : totalVacancies / pagesCount
     const [keyWordValue, setKeyWordValue] = useState<string>(keyWord)
 
     const {classes, cx} = useStyles();

@@ -120,8 +120,8 @@ export const Filters = () => {
                     min={0}
                     value={minSalaryValue}
                     onChange={(value) => {
-                        setMinSalaryValue(value);
-                        setMaxSalaryValue(value)
+                        setMinSalaryValue(value)
+                        value > maxSalaryValue && setMaxSalaryValue(value)
                     }}
                     step={1000}
                     {...minSalaryInputDataAttribute}
