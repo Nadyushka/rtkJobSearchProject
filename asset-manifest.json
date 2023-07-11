@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/rtkJobSearchProject/static/css/main.073c9b0a.css",
+    "main.js": "/rtkJobSearchProject/static/js/main.1890f221.js",
+    "static/js/787.5fb22c03.chunk.js": "/rtkJobSearchProject/static/js/787.5fb22c03.chunk.js",
+    "static/media/OpenSans-Bold.ttf": "/rtkJobSearchProject/static/media/OpenSans-Bold.728c265bc5aed977c34f.ttf",
+    "static/media/noVacanciesFoundIcon.svg": "/rtkJobSearchProject/static/media/noVacanciesFoundIcon.e971983585ef9132b066d5ec6b8321e4.svg",
+    "static/media/appIcon.svg": "/rtkJobSearchProject/static/media/appIcon.fc834db5ebaf00f2f9fad805ab33c29c.svg",
+    "static/media/selectedStar.svg": "/rtkJobSearchProject/static/media/selectedStar.952b0638f5c25910c4e6190d7b8ae743.svg",
+    "static/media/notSelectedStar.svg": "/rtkJobSearchProject/static/media/notSelectedStar.540f30acf091809d244954593acb0eb2.svg",
+    "static/media/locationIcon.svg": "/rtkJobSearchProject/static/media/locationIcon.e773c0de5c7b766b78fb0781f1bb8d5d.svg",
+    "index.html": "/rtkJobSearchProject/index.html",
+    "static/media/cross.svg": "/rtkJobSearchProject/static/media/cross.63977825dcdcfe3b2510577dccc0b9b6.svg",
+    "main.073c9b0a.css.map": "/rtkJobSearchProject/static/css/main.073c9b0a.css.map",
+    "main.1890f221.js.map": "/rtkJobSearchProject/static/js/main.1890f221.js.map",
+    "787.5fb22c03.chunk.js.map": "/rtkJobSearchProject/static/js/787.5fb22c03.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.1890f221.js"
+  ]
+}
